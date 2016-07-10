@@ -8,7 +8,7 @@ Contact Us
 <link rel="stylesheet" href="{% static 'sophia/plugins/sky-forms-pro/skyforms/css/sky-forms.css' %}">
 <link rel="stylesheet" href="{% static 'sophia/plugins/sky-forms-pro/skyforms/custom/custom-sky-forms.css' %}">
 <!--[if lt IE 9]><link rel="stylesheet" href="assets/plugins/sky-forms-pro/skyforms/css/sky-forms-ie8.css"><![endif]-->
-
+<link rel="stylesheet" href="{% static 'sophia/plugins/ladda-buttons/css/custom-lada-btn.css' %}">
 <link rel="stylesheet" href="{% static 'sophia/css/pages/page_contact.css' %}">
 {% endblock %}
 
@@ -31,6 +31,13 @@ Contact Us
 </div><!---/map-->
 <!-- End Google Map -->
 <div class="container content">
+  {% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-success">
+            {{message}}
+        </div>
+    {% endfor %}
+{% endif %}
   <div class="row margin-bottom-30">
     <div class="col-md-9 mb-margin-bottom-30">
       <div class="headline"><h2>Contact Form</h2></div>
@@ -121,7 +128,9 @@ Contact Us
             </fieldset>
 
             <footer>
-              <button type="submit" class="btn-u">Send message</button>
+              <div class="ladda-btn">
+                <button type="submit" class="btn-u btn-u-primary ladda-button" data-style="zoom-out">Send message</button>
+              </div>
             </footer>
 
           </form>
@@ -152,6 +161,9 @@ Contact Us
   <script type="text/javascript" src="{% static 'sophia/plugins/gmap/gmap.js' %}"></script>
   <script type="text/javascript" src="{% static 'sophia/js/app.js' %}"></script>
   <script type="text/javascript" src="{% static 'sophia/js/page_contacts.js' %}"></script>
+  <script src="{% static 'sophia/plugins/ladda-buttons/js/spin.min.js'%}"></script>
+  <script src="{% static 'sophia/plugins/ladda-buttons/js/ladda.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'sophia/js/plugins/ladda-buttons.js' %}"></script>
   <script type="text/javascript">
     jQuery(document).ready(function() {
       App.init();

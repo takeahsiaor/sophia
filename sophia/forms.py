@@ -36,12 +36,13 @@ class ContactForm(forms.Form):
                     'message':message}
         body = render_to_string('contact_email_template.html', context)
 
-        recipients = settings.EMAIL_RECIPIENTS
         if send_copy:
-            recipients.append(email)
+            copy_body = render_to_string('contact_email_copy.html', context)
+            send_mail(subject_str, copy_body, settings.DEFAULT_FROM_EMAIL,
+                     [email], fail_silently=False)
 
         send_mail(subject_str, body, settings.DEFAULT_FROM_EMAIL,
-                 recipients, fail_silently=False)
+                 settings.EMAIL_RECIPIENTS, fail_silently=False)
 
 class ScheduleTrialLessonForm(forms.Form):
     date = forms.CharField(required=True, widget=forms.HiddenInput())
