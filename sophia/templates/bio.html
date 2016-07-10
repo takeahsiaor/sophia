@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block headtitle %}
+Biography
+{% endblock %}
+
+{% block content %}
+    <!--=== Breadcrumbs ===-->
+    <div class="breadcrumbs breadcrumbs-light">
+      <div class="container">
+        <h1 class="pull-left">Biography</h1>
+        <ul class="pull-right breadcrumb">
+          <li><a href="{% url 'home' %}">Home</a></li>
+          <li class="active">Biography</li>
+        </ul>
+      </div>
+    </div>
+    <!--=== End Breadcrumbs ===-->
+
+    <!-- About Me Block -->
+    <div class="container content-sm">
+      <div class="row about-me">
+        <div class="col-sm-4 shadow-wrapper md-margin-bottom-40">
+          <div class="box-shadow shadow-effect-2">
+            <img class="img-responsive img-bordered full-width" src="{% static 'sophia/DSC_0016.jpg' %}" alt="">
+          </div>
+        </div>
+
+        <div class="col-sm-8">
+          <div class="overflow-h">
+            <div class="pull-left">
+              <h2>SOPHIA HSIAO</h2>
+              <span>Owner, Instructor</span>
+            </div>
+            <ul class="social-icons pull-right">
+              <li><a class="rounded-x social_facebook" data-original-title="Facebook" href="#"></a></li>
+              <li><a class="rounded-x social_twitter" data-original-title="Twitter" href="#"></a></li>
+              <li><a class="rounded-x social_googleplus" data-original-title="Google Plus" href="#"></a></li>
+              <li><a class="rounded-x social_linkedin" data-original-title="Linkedin" href="#"></a></li>
+            </ul>
+          </div>
+          <p>I graduated in 2009 with a Bachelor of Music degree in Violin Performance from the University of Illinois at Urbana-Champaign. Upon graduation, I pursued missions work with a college ministry called InterVarsity Christian Fellowship where I mentored students who were studying music, art, theater, and film. My passion for students to pursue music began to fuel my desire to become a teacher so that I could equip the next generation of student musicians. </p>
+
+          <hr>
+
+          <p>In 2013, I began my private violin studio in Glenview then relocated to Arlington Heights in 2015 where I currently teach in my home. In addition to teaching privately, I have been a violin instructor at the Des Plaines School of Music since 2014.</p>
+
+          <hr>
+
+          <p>I have performed in a variety of settings including orchestral and chamber ensembles, weddings and engagement parties, and church events and conferences. My husband and I enjoy playing together as a violin and guitar duo for special events. Some of my favorite activities include spending time with my husband on house projects, trying new restaurants with friends and family, and browsing Pinterest for new craft and recipe ideas.</p>
+          <hr>
+        </div>
+      </div>
+    </div>
+    <!-- End About Me Block -->
+
+    <!-- Parallax Quote -->
+    <div class="parallax-quote parallax-quote-light parallaxBg">
+      <div class="container">
+        <div class="parallax-quote-in rounded">
+          <p>Every student can learn how to play music when they are given <span class="color-green">sound instruction</span> and a <span class="color-green">nurturing environment.</span></p>
+          <small>- SOPHIA HSIAO -</small>
+        </div>
+      </div>
+    </div>
+    <!-- End Parallax Quote -->
+
+    <!-- Portfolio -->
+    <div class="container content-sm">
+      <div class="text-center">
+        <h2 class="title-v2 title-center">LATEST THOUGHTS FROM SOPHIA</h2>
+      </div>
+      <div class="row">
+        {% for post in recent_posts %}
+        <div class="col-sm-4">
+          <div class="thumbnails-v1">
+            <div class="thumbnail-img">
+              <a href="{% url 'blog_entry' post.id %}"><img class="img-responsive" src="{{post.main_image.url}}" alt=""></a>
+            </div>
+            <div class="caption">
+              <h3><a href="{% url 'blog_entry' post.id">{{post.title}}</a></h3>
+              <p>{{post.content|safe|truncatewords_html:50}}</p>
+              <p><a class="read-more" href="{% url 'blog_entry' post.id %}">See More</a></p>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+    </div>
+<!-- End Portfolio -->
+<hr>
+<!-- Call To Action -->
+<div class="call-action-v1">
+  <div class="container">
+    <div class="call-action-v1-box">
+      <div class="call-action-v1-in">
+        <p>We know how difficult it can be to find the right teacher for you. That's why we offer a free trial lesson to help you evaluate whether we'd be a good fit!</p>
+      </div>
+      <div class="call-action-v1-in inner-btn page-scroll">
+        <a href="{% url 'schedule_trial_lesson' %}" class="btn-u btn-brd btn-brd-hover btn-u-dark btn-u-block">Get Started</a>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Call To Action -->
+
+{% endblock %}

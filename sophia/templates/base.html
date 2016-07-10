@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->  
+<!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->  
+<!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->  
+<head>
+    <title>{% block headtitle %}{% endblock %} | Sophia Hsiao Studio</title>
+    {% load staticfiles %}
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="{% static 'sophia/favicon.ico' %}">
+
+    <!-- Web Fonts -->
+    <link rel='stylesheet' type='text/css' href='//fonts.googleapis.com/css?family=Open+Sans:400,300,600&amp;subset=cyrillic,latin'>
+
+    <!-- CSS Global Compulsory -->
+    <link rel="stylesheet" href="{% static 'sophia/plugins/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'sophia/css/style.css' %}">
+
+    <!-- CSS Header and Footer -->
+    <link rel="stylesheet" href="{% static 'sophia/css/headers/header-default.css' %}">
+    <link rel="stylesheet" href="{% static 'sophia/css/footers/footer-v1.css' %}">
+
+    <!-- CSS Implementing Plugins -->
+    <link rel="stylesheet" href="{% static 'sophia/plugins/animate.css' %}">
+    <link rel="stylesheet" href="{% static 'sophia/plugins/line-icons/line-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'sophia/plugins/font-awesome/css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'sophia/plugins/fancybox/source/jquery.fancybox.css' %}">
+    <link rel="stylesheet" href="{% static 'sophia/plugins/owl-carousel/owl-carousel/owl.carousel.css' %}">
+    <link rel="stylesheet" href="{% static 'sophia/plugins/revolution-slider/rs-plugin/css/settings.css' %}" type="text/css" media="screen">
+    <link rel="stylesheet" href="{% static 'sophia/plugins/cube-portfolio/cubeportfolio/css/cubeportfolio.min.css' %}">
+    <link rel="stylesheet" href="{% static 'sophia/plugins/cube-portfolio/cubeportfolio/custom/custom-cubeportfolio.css' %}">
+    <!--[if lt IE 9]><link rel="stylesheet" href="assets/plugins/revolution-slider/rs-plugin/css/settings-ie8.css" type="text/css" media="screen"><![endif]-->
+
+    <!-- CSS Theme -->    
+    <link rel="stylesheet" href="{% static 'sophia/css/theme-colors/default.css' %}">
+    <link rel="stylesheet" href="{% static 'sophia/css/theme-skins/dark.css' %}">
+    {% block headloaders %}
+    {% endblock %}
+    <!-- CSS Customization -->
+    <link rel="stylesheet" href="{% static 'sophia/css/custom.css' %}">
+</head> 
+
+<body>
+    <div class="wrapper page-option-v1">
+        <!--=== Header ===-->
+        <div class="header">
+            <div class="container">
+                <!-- Logo -->
+                <a class="logo" href="{% url 'home' %}">
+                    <img src="{% static 'sophia/basic_logo.png' %}" alt="Logo">
+                </a>
+                <!-- End Logo -->
+
+                <!-- Toggle get grouped for better mobile display -->
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="fa fa-bars"></span>
+                </button>
+                <!-- End Toggle -->
+            </div><!--/end container-->
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse mega-menu navbar-responsive-collapse">
+                <div class="container">
+                    <ul class="nav navbar-nav">
+                        <!-- Home -->
+                        <li>
+                            <a href="{% url 'home' %}">Home</a>
+                        </li>
+
+                        <li class="dropdown">
+                            <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
+                                About
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{% url 'bio' %}">Biography</a></li>
+                                <li><a href="{% url 'testimonials' %}">Testimonials</a></li>
+                                <li><a href="{% url 'philosophy' %}">Teaching Philosophy</a></li>
+                                <li><a href="{% url 'policy' %}">Studio Policy</a></li>
+                            </ul>
+
+                        </li>
+                        <li>
+                            <a href="{% url 'schedule_trial_lesson' %}">Schedule Trial Lesson</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'blog' %}">Blog</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'contact' %}">Contact</a>
+                        </li>
+                    </ul>
+                </div><!--/end container-->
+            </div><!--/navbar-collapse-->
+        </div>
+        <!--=== End Header ===-->
+
+    {% block content %}
+
+    {% endblock %}
+    <!--=== Footer Version 1 ===-->
+    <div class="footer-v1">
+        <div class="footer">
+            <div class="container">
+                <div class="row">
+                    <!-- About -->
+                    <div class="col-md-3 md-margin-bottom-40">
+                        <a href="index.html"><img id="logo-footer" class="footer-logo" src="assets/img/logo2-default.png" alt=""></a>
+                        <p>Sophia Hsiao provides private violin lessons in <strong>Arlington Heights, IL</strong> for students of all ages and skill levels since 2013</p>   
+                    </div><!--/col-md-3-->
+                    <!-- End About -->
+
+                    <!-- Latest -->
+                    <div class="col-md-3 md-margin-bottom-40">
+                        <div class="posts">
+                            <div class="headline"><h2>Latest Posts</h2></div>
+                            <ul class="list-unstyled latest-list">
+                                {% for post in recent_posts %}
+                                <li>
+                                    <a href="{% url 'blog_entry' post.pk %}">
+                                        {{ post.title }}
+                                    </a>
+                                    <small>{{ post.created_on }}</small>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div><!--/col-md-3-->  
+                    <!-- End Latest --> 
+                    
+                    <!-- Link List -->
+                    <div class="col-md-3 md-margin-bottom-40">
+                        <div class="headline"><h2>Useful Links</h2></div>
+                        <ul class="list-unstyled link-list">
+                            <li><a href="{% url 'bio' %}">Biography</a><i class="fa fa-angle-right"></i></li>
+                            <li><a href="{% url 'philosophy' %}">Teaching Philosophy</a><i class="fa fa-angle-right"></i></li>
+                            <li><a href="{% url 'policy' %}">Studio Policy</a><i class="fa fa-angle-right"></i></li>
+                            <li><a href="{% url 'blog' %}">Blog</a><i class="fa fa-angle-right"></i></li>
+                        </ul>
+                    </div><!--/col-md-3-->
+                    <div class="col-md-3 md-margin-bottom-40">
+                        <div class="headline"><h2>Contact</h2></div>
+                        <ul class="list-unstyled link-list">
+                            <li><a href="{% url 'contact' %}">Contact us</a><i class="fa fa-angle-right"></i></li>
+
+                            <li><a href="{% url 'schedule_trial_lesson' %}">Schedule Trial Lesson</a><i class="fa fa-angle-right"></i></li>
+
+                        </ul>
+                    </div><!--/col-md-3-->
+                    <!-- End Link List -->                    
+
+                </div>
+            </div> 
+        </div><!--/footer-->
+
+        <div class="copyright">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">                     
+                        <p>
+                            2016 &copy; All Rights Reserved.
+                        </p>
+                    </div>
+
+                    <!-- Social Links -->
+                    <div class="col-md-6">
+                        <ul class="footer-socials list-inline">
+                            <li>
+                                <a href="#" class="tooltips" data-toggle="tooltip" data-placement="top" title="" data-original-title="Facebook">
+                                    <i class="fa fa-facebook"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="tooltips" data-toggle="tooltip" data-placement="top" title="" data-original-title="Google Plus">
+                                    <i class="fa fa-google-plus"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="tooltips" data-toggle="tooltip" data-placement="top" title="" data-original-title="Linkedin">
+                                    <i class="fa fa-linkedin"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- End Social Links -->
+                </div>
+            </div> 
+        </div><!--/copyright-->
+    </div>     
+    <!--=== End Footer Version 1 ===-->
+</div><!--/wrapper-->
+
+<!-- JS Global Compulsory -->     
+<script type="text/javascript" src="{% static 'sophia/plugins/jquery/jquery.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'sophia/plugins/jquery/jquery-migrate.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'sophia/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
+<!-- JS Implementing Plugins -->
+<script type="text/javascript" src="{% static 'sophia/plugins/back-to-top.js' %}"></script>
+<script type="text/javascript" src="{% static 'sophia/plugins/smoothScroll.js' %}"></script>
+<script type="text/javascript" src="{% static 'sophia/plugins/jquery.parallax.js' %}"></script>
+<script type="text/javascript" src="{% static 'sophia/plugins/fancybox/source/jquery.fancybox.pack.js' %}"></script>
+<script type="text/javascript" src="{% static 'sophia/plugins/counter/jquery.counterup.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'sophia/plugins/cube-portfolio/cubeportfolio/js/jquery.cubeportfolio.min.js' %}"></script>
+
+<script type="text/javascript" src="{% static 'sophia/plugins/owl-carousel/owl-carousel/owl.carousel.js' %}"></script>
+<script type="text/javascript" src="{% static 'sophia/plugins/revolution-slider/rs-plugin/js/jquery.themepunch.tools.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'sophia/plugins/revolution-slider/rs-plugin/js/jquery.themepunch.revolution.min.js' %}"></script>
+<!-- JS Customization -->
+<script type="text/javascript" src="{% static 'sophia/js/custom.js' %}"></script>
+<!-- JS Page Level -->           
+<script type="text/javascript" src="{% static 'sophia/js/app.js' %}"></script>
+<script type="text/javascript" src="{% static 'sophia/js/plugins/fancy-box.js' %}"></script>
+<script type="text/javascript" src="{% static 'sophia/js/plugins/revolution-slider.js' %}"></script>
+<script type="text/javascript" src="{% static 'sophia/js/plugins/style-switcher.js' %}"></script>
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+        App.init();
+        App.initParallaxBg();
+        FancyBox.initFancybox();
+        RevolutionSlider.initRSfullWidth();
+    });
+</script>
+<!--[if lt IE 9]>
+    <script src="assets/plugins/respond.js"></script>
+    <script src="assets/plugins/html5shiv.js"></script>
+    <script src="assets/js/plugins/placeholder-IE-fixes.js"></script>
+<![endif]-->
+{% block endloaders %}
+{% endblock %}
+</body>
+</html>

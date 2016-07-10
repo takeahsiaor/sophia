@@ -1,0 +1,11 @@
+<div class="headline-v2"><h2>Tags</h2></div>
+<!-- Tags v2 -->
+<ul class="list-inline tags-v2 margin-bottom-50">
+  {% for tag in tags %}
+    <li>
+      <a href="{% url 'blog_by_tag' tag.id %}">
+        <i class="fa fa-tags"></i> {{tag.name}}
+      </a>
+    </li>
+  {% endfor %}
+</ul>

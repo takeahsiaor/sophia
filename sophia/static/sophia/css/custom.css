@@ -1,0 +1,55 @@
+/* Add here all your css styles (customizations) */
+
+/*for bio page*/
+.parallax-quote {
+  color: #fff;
+  padding: 100px 0;
+  position: relative;
+  text-align: center;
+  background: url(../DSC_0296.jpg) 50% 0 repeat fixed;
+}
+.parallax-quote-light:after {
+  background: rgba(255,255,255,0.7);
+}
+
+/*.parallax-quote-light
+.parallax-quote-in p{
+  font-size:22px;
+  /*text-transform:none;*/
+}*/
+
+/*for faq page*/
+.breadcrumbs-v2-in{
+  padding: 100px 0;
+}
+.faq-breadcrumb {
+    text-align: center;
+    position: relative;
+    background: url(../DSC_0310.jpg) no-repeat center;
+}
+
+/*for philosophy page*/
+.breadcrumbs-v3.img-v3 {
+  background: linear-gradient( rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url(../DSC_0334.jpg) no-repeat;
+  background-size: cover;
+  background-position: center center;
+}
+
+/*for blog page*/
+.breadcrumbs-v3.img-v4 {
+  background: linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(../DSC_0303.jpg) no-repeat;
+  background-size: cover;
+  background-position: center center;
+}
+
+/*for testimonial page*/
+.breadcrumbs-v3.img-v5 {
+  background: linear-gradient( rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4) ), url(../DSC_0310.jpg) no-repeat center;
+  /*background: url(../DSC_0310.jpg) no-repeat center;*/
+  background-size: cover;
+  background-position: center center;
+}
+
+.form-font {
+  font: 13px/1.55 'Open Sans', Helvetica, Arial, sans-serif;
+}

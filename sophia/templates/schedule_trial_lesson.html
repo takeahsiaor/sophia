@@ -1,0 +1,290 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block headtitle %}
+Schedule Trial Lesson
+{% endblock %}
+
+{% block headloaders %}
+  <link rel="stylesheet" href="{% static 'sophia/css/pages/pricing/pricing_v6.css' %}">
+  <link rel="stylesheet" href="{% static 'sophia/css/pages/pricing/pricing_v7.css' %}">
+  <link rel="stylesheet" href="{% static 'sophia/css/pages/pricing/pricing_v8.css' %}">
+  <link rel="stylesheet" href="{% static 'sophia/plugins/sky-forms-pro/skyforms/css/sky-forms.css' %}">
+  <link rel="stylesheet" href="{% static 'sophia/plugins/sky-forms-pro/skyforms/custom/custom-sky-forms.css' %}">
+  <link rel="stylesheet" href="{% static 'sophia/plugins/ladda-buttons/css/custom-lada-btn.css' %}">
+{% endblock %}
+
+{% block content %}
+<!--=== Breadcrumbs ===-->
+<div class="breadcrumbs">
+  <div class="container">
+    <h1 class="pull-left">Schedule Your Trial Lesson</h1>
+    <ul class="pull-right breadcrumb">
+      <li><a href="{% url 'home' %}">Home</a></li>
+      <li class="active">Schedule Trial Lesson</li>
+    </ul>
+  </div>
+</div><!--/breadcrumbs-->
+<!--=== End Breadcrumbs ===-->
+
+<!--=== Content Part ===-->
+<div class="container content">
+  {% if messages %}
+      {% for message in messages %}
+          <div class="alert alert-success">
+              {{message}}
+          </div>
+      {% endfor %}
+  {% endif %}
+  <div class="row margin-bottom-30">
+    <div class="col-md-9 mb-margin-bottom-30">
+      <p>Accusamus et iusto odio dignissimos <strong class="color-green">ducimus qui blanditiis</strong> praesentium voluptatum deleniti atque corrupti quos dolores et quas feugiat. Et harum quidem rerum facilis est et expedita distinctio lorem ipsum dolor sit amet, consectetur adipiscing <strong class="color-green">elit landitiis</strong>. Quidem rerum facilis est et expedita distinctio lorem ipsum dolor sit amet consectetur adipidipiscing elit mag scing. Ut non libero consectetur adipiscing elit magna distinctio lorem ipsum dolor sit amet consectetur adipiscing eliidem rerum facilist.</p><br>
+      <div class="tag-box tag-box-v2">
+        <p>Please note that the day and time for your trial lesson will be your official lesson time should you decide to continue lessons.</p>
+      </div>
+      <p>Et harum quidem rerum facilis est et expedita distinctio lorem ipsum dolor sit amet consectetur adipiscing elit. Ut non libero consectetur adipiscing elit magna. Sed et quam lacus. Fusce condimentum eleifend enim a feugiat.</p><br>
+    </div>
+    <div class="col-md-3">
+      <!-- Google Map -->
+      <div id="map" class="map map-box map-box-space1 margin-bottom-40">
+      </div><!---/map-->
+      <!-- End Google Map -->
+    </div>
+  </div>
+
+  <div class="cube-portfolio container margin-bottom-60">
+    <div class="content-xs">
+      <div id="filters-container" class="cbp-l-filters-text content-xs">
+        <div data-filter="*" class="cbp-filter-item-active cbp-filter-item"> All </div> |
+        <div data-filter=".Monday" class="cbp-filter-item"> Monday </div> |
+        <div data-filter=".Tuesday" class="cbp-filter-item"> Tuesday </div> |
+        <div data-filter=".Wednesday" class="cbp-filter-item"> Wednesday </div> |
+        <div data-filter=".Thursday" class="cbp-filter-item"> Thursday </div> |
+        <div data-filter=".Friday" class="cbp-filter-item"> Friday </div> |
+        <div data-filter=".Saturday" class="cbp-filter-item"> Saturday </div> |
+        <div data-filter=".Sunday" class="cbp-filter-item"> Sunday </div>
+      </div><!--/end Filters Container-->
+    </div>
+    <!-- Pricing Table-v6 -->
+
+      <div id="grid-container" class="cbp-l-grid-agency">
+        {% for trial_lesson in trial_lessons %}
+          <div class="cbp-item {{trial_lesson.timeslot.day}}">
+            <div class="cbp-caption">
+              <div class="cbp-caption-defaultWrap">
+                    <div class="pricing-table-v6">
+                      <div class="service-block service-block-{{trial_lesson.color_class}}">
+                        <i class="icon-custom icon-color-light rounded-x fa fa-calendar"></i>
+                        <h2 class="heading-md">{{trial_lesson.timeslot.day}}s</h2>
+                        <h2 class="heading-md">{{trial_lesson.timeslot.start_time}} to {{trial_lesson.timeslot.end_time}}</h2>
+                        <hr>
+                        <p>Select a date below:</p>
+                        {% for date in trial_lesson.lesson_dates %}
+                          <a class="btn-brd btn-u select-date" style="display:block;" data-toggle="modal" data-target="#responsive" data-date="{{date}}" data-time-slot-pk="{{trial_lesson.timeslot.pk }}" data-time-slot-day="{{trial_lesson.timeslot.day}}" data-time-slot-start="{{trial_lesson.timeslot.start_time}}" data-time-slot-end="{{trial_lesson.timeslot.end_time}}">{{date}}</a><br>
+                        {% endfor %}
+                      </div>
+                    </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+        <div class="cbp-item Monday Tuesday Wednesday Thursday Friday Saturday Sunday">
+          <div class="cbp-caption">
+            <div class="cbp-caption-defaultWrap">
+                  <div class="pricing-table-v6">
+                    <div class="service-block service-block-grey">
+                      <i class="icon-custom icon-color-light rounded-x fa fa-question"></i>
+                      <h2 class="heading-md">Don't see the time you want?</h2>
+                      <p>Contact us through the contact page and we'll try to accommodate you!</p>
+                      <hr>
+                      <a href="{% url 'contact' %}" class="btn-u btn-brd btn-u">Contact</a><br>
+                    </div>
+                  </div>
+            </div>
+          </div>
+        </div>
+    </div>
+    <!-- End Pricing Table-v6 -->
+  </div>
+</div>
+
+
+<div class="modal fade" id="responsive" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel4">You're almost done!</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12">
+            <p id="selected-lesson-info"></p>
+            <p>We just need a bit more info before we can schedule your lesson:</p>
+            
+
+            <form method="post" id="sky-form3" class="sky-form sky-changes-3">
+              {% csrf_token %}
+              <fieldset>
+                <div class="row">
+                  {{form.date}}
+                  {{form.timeslot_pk}}
+                  {{form.start_time}}
+                  {{form.end_time}}
+                  {{form.day}}
+                  <section class="col col-6">
+                    <label class="label">{{form.student_name.label}}</label>
+                    <label class="input">
+                      <i class="icon-append fa fa-user"></i>
+                      {{form.student_name}}
+                    </label>
+                    {% if form.student_name.errors %}
+                      {% for error in form.student_name.errors %}
+                        <em for="student_name" class="alert-danger">{{error}}</em>
+                      {% endfor %}
+                    {% endif %}
+                  </section>
+                  <section class="col col-3">
+                    <label class="label">{{form.age.label}}</label>
+                    <label class="input">
+                      {{form.age}}
+                      <i class="icon-append fa fa-calendar"></i>
+                    </label>
+                    {% if form.age.errors %}
+                      {% for error in form.age.errors %}
+                        <em for="age" class="alert-danger">{{error}}</em>
+                      {% endfor %}
+                    {% endif %}
+                  </section>
+                </div>
+
+                <div class="row">
+                  <section class="col col-6">
+                    <label class="label">{{form.email.label}}</label>
+                    <label class="input">
+                      <i class="icon-append fa fa-envelope-o"></i>
+                      {{form.email}}
+                    </label>
+                    {% if form.email.errors %}
+                      {% for error in form.email.errors %}
+                        <em for="email" class="alert-danger">{{error}}</em>
+                      {% endfor %}
+                    {% endif %}
+                  </section>
+                  <section class="col col-6">
+                    <label class="label">{{form.phone.label}}</label>
+                    <label class="input">
+                      {{form.phone}}
+                      <i class="icon-append fa fa-phone"></i>
+                    </label>
+                    {% if form.phone.errors %}
+                      {% for error in form.phone.errors %}
+                        <em for="phone" class="alert-danger">{{error}}</em>
+                      {% endfor %}
+                    {% endif %}
+                  </section>
+
+                </div>
+
+                <section>
+                  <label class="label">{{form.comments.label}}</label>
+                  <label class="textarea">
+                    <i class="icon-append fa fa-comment" style="border-bottom-width:1px; border-bottom-style:solid;"></i>
+                    {{form.comments}}
+                  </label>
+                  {% if form.comments.errors %}
+                    {% for error in form.comments.errors %}
+                      <em for="comments" class="alert-danger">{{error}}</em>
+                    {% endfor %}
+                  {% endif %}
+                </section>
+
+                <section>
+                  <label class="checkbox">{{form.own_violin}}<i></i>
+                    <p class="form-font">{{form.own_violin.label}}</p>
+                  </label>
+                </section>
+
+                <section>
+                  <label class="label">Enter characters below:</label>
+                  <label class="input input-captcha">
+                    {{form.captcha}}
+                  </label>
+                  {% if form.captcha.errors %}
+                    {% for error in form.captcha.errors %}
+                      <em for="captcha" class="alert-danger">{{error}}</em>
+                    {% endfor %}
+                  {% endif %}
+                </section>
+                
+                <div class="modal-footer">
+                <section class="pull-right">
+                  <div class="ladda-btn">
+                    <button type="button" class="btn-u btn-u-default ladda-button" data-dismiss="modal">Cancel</button>
+                    <button id="submit-schedule" type="submit" class="btn-u btn-u-primary ladda-button" data-style="zoom-out">Submit</button>
+                  </div>
+                </section>
+                </div>
+              </fieldset>
+            </form>
+          </div>
+        </div>
+      </div>
+  
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block endloaders %}
+  <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+  <script type="text/javascript" src="{% static 'sophia/plugins/gmap/gmap.js' %}"></script>
+  <script type="text/javascript" src="{% static 'sophia/js/page_contacts.js' %}"></script>
+  <script type="text/javascript" src="{% static 'sophia/js/plugins/cube-portfolio/cube-portfolio-4.js' %}"></script>
+  <script src="{% static 'sophia/plugins/ladda-buttons/js/spin.min.js'%}"></script>
+  <script src="{% static 'sophia/plugins/ladda-buttons/js/ladda.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'sophia/js/plugins/ladda-buttons.js' %}"></script>
+  <script type="text/javascript">
+    jQuery(document).ready(function() {
+      App.init();
+      ContactPage.initMap();
+
+      var selected_date = $("#id_date").val()
+      // This means that the previous form submit was invalid and django
+      // returned a form with initial data and errors
+      if (selected_date){
+        // get the time data from the invalid form
+        var date = $("#id_date").val();
+        var start_time = $("#id_start_time").val();
+        var end_time = $("#id_end_time").val();
+        var day = $("#id_day").val();
+
+        var html = "You've selected " + day + ", " + date + " from " + start_time + " to " + end_time;
+        $("#selected-lesson-info").html(html);
+
+        $("#responsive").modal('show');
+        
+
+      }
+
+      $('.select-date').click(function(){
+        var timeslot_pk = $(this).data('time-slot-pk');
+        var date = $(this).data('date');
+        var start_time = $(this).data('time-slot-start');
+        var end_time = $(this).data('time-slot-end');
+        var day = $(this).data('time-slot-day');
+
+        $('#id_date').val(date);
+        $('#id_timeslot_pk').val(timeslot_pk);
+        $('#id_start_time').val(start_time);
+        $('#id_end_time').val(end_time);
+        $('#id_day').val(day);
+
+        var html = "You've selected " + day + ", " + date + " from " + start_time + " to " + end_time;
+        $("#selected-lesson-info").html(html);
+        // update modal text to show times
+      });
+
+
+    });
+  </script>
+{% endblock %}

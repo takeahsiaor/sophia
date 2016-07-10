@@ -1,0 +1,16 @@
+A new student has scheduled a trial lesson. Here is their information:
+
+Date and time: {{timeslot.day}}, {{date|date:"M d, Y"}} from {{timeslot.start_time}} to {{timeslot.end_time}}
+Name: {{student_name}}
+Age: {{age}}
+Email: {{email}}
+Phone: {{phone}}
+{% if comments %}Additional info: {{comments}}{% endif %}
+
+{% if own_violin %}They have a violin they can use{% else %}They do not currently have a violin{% endif %}
+
+
+Follow up with them as soon as possible!
+
+Sincerely,
+Sophia Hsiao Studio

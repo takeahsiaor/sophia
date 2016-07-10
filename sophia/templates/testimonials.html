@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block headtitle %}
+Testimonials
+{% endblock %}
+
+{% block content %}
+<!--=== Breadcrumbs v3 ===-->
+<div class="breadcrumbs-v3 img-v5 text-center">
+  <div class="container">
+    <h1>Testimonials</h1>
+    <br>
+    <ul class="breadcrumb-v2 list-inline">
+      <li><a href="{% url 'home' %}"><i class="rounded-x fa fa-angle-right"></i>Home</a></li>
+      <li class="active"><i class="rounded-x fa fa-angle-right"></i>Testimonials</li>
+    </ul>
+  </div>
+</div>
+<!--=== End Breadcrumbs v3 ===-->
+
+<!-- Testimonials v4 -->
+<div class="bg-color-light">
+  <div class="container content-md">
+    <div class="headline-center margin-bottom-60">
+      <h2>WHAT STUDENTS SAY ABOUT SOPHIA</h2>
+    </div>
+
+      {% for testimonial in testimonials %}
+        {% if not forloop.counter|divisibleby:2 %}
+        <div class="row margin-bottom-50">
+        {% endif %}
+        <div class="col-sm-6">
+          <div class="testimonials-v4 md-margin-bottom-50">
+            <div class="testimonials-v4-in">
+              <p>{{testimonial.text}}</p>
+            </div>
+            <span class="testimonials-author">
+              {{testimonial.client_name}}<br>
+              <em>{{testimonial.start_date}} to {{testimonial.end_date}}</em>
+            </span>
+          </div>
+        </div>
+        {% if forloop.counter|divisibleby:2 %}
+        </div>
+        {% elif forloop.last %}
+        </div>
+        {% endif %}
+
+      {% endfor %}
+  </div><!--/end container-->
+</div>
+<!-- End Testimonials v4 -->
+{% endblock %}

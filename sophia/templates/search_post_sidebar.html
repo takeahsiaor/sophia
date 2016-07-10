@@ -1,0 +1,9 @@
+<div class="headline-v2"><h2>Search</h2></div>
+  <form action="{% url 'search_blog' %}" role="form" method="get">
+    <div class="input-group margin-bottom-40">
+            <input type="text" name="query" id="id_query" class="form-control" placeholder="Search">
+            <span class="input-group-btn">
+              <button class="btn-u" type="submit"><i class="fa fa-search"></i></button>
+            </span>
+    </div>
+  </form>

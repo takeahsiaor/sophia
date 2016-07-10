@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block headtitle %}
+Teaching Philosophy
+{% endblock %}
+
+{% block content %}
+<!--=== Breadcrumbs v3 ===-->
+<div class="breadcrumbs-v3 img-v3 text-center">
+  <div class="container">
+    <h1>Teaching Philosophy</h1>
+    <br>
+    <ul class="breadcrumb-v2 list-inline">
+      <li><a href="{% url 'home' %}"><i class="rounded-x fa fa-angle-right"></i>Home</a></li>
+      <li class="active"><i class="rounded-x fa fa-angle-right"></i>Teaching Philosophy</li>
+    </ul>
+  </div>
+</div>
+<!--=== End Breadcrumbs v3 ===-->
+
+<!--=== Service Block ===-->
+<div class="bg-color-light">
+  <div class="container content-sm">
+<!--     <div class="headline-center margin-bottom-60">
+      <h2>OUR FEATURES</h2>
+      <p>Phasellus vitae ipsum ex. Etiam eu vestibulum ante. <br>
+        Lorem ipsum <strong>dolor</strong> sit amet, consectetur adipiscing elit. Morbi libero libero, imperdiet fringilla </p>
+      </div>
+ -->
+      <!-- Service Block v8 -->
+      <div class="row margin-bottom-30">
+        <div class="col-sm-6 sm-margin-bottom-50">
+          <div class="service-block-v8">
+            <i class="fa fa-graduation-cap"></i>
+            <div class="service-block-desc">
+              <h3>Every student can learn</h3>
+              <p>When given sound instruction and a nurturing environment, any student can learn to play music. I have taught students ages 4 to 65 and have grown to love teaching and walking alongside my students on their musical journeys.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 sm-margin-bottom-20">
+          <div class="service-block-v8">
+            <i class="fa fa-users"></i>
+            <div class="service-block-desc">
+              <h3>Students learn differently</h3>
+              <p>I am intentional about seeking new ways to adapt to each student's learning style and learning pace because what may help one student learn quickly may not be helpful for another.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- End Service Block v8 -->
+
+      <!-- Service Block v8 -->
+      <div class="row margin-bottom-30">
+        <div class="col-sm-6 sm-margin-bottom-50">
+          <div class="service-block-v8">
+            <i class="fa fa-comments-o"></i>
+            <div class="service-block-desc">
+              <h3>Teaching is relational</h3>
+              <p>I value building a relationship with each student and family so that I have their trust to continue teaching them new skills and techniques. For younger students, I strive to include parents in the learning process because their involvement in the student's development is crucial.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 sm-margin-bottom-20">
+          <div class="service-block-v8">
+            <i class="fa fa-wrench"></i>
+            <div class="service-block-desc">
+              <h3>Equipping Students</h3>
+              <p>I believe in equipping each student with the necessary tools they need in order to grow as a musician and to learn the instrument better. I engage my students by asking questions and discussing what needs work to help the student take responsibility for their learning.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- End Service Block v8 -->
+
+      <!-- Service Block v8 -->
+      <div class="row margin-bottom-20">
+        <div class="col-sm-6 sm-margin-bottom-50">
+          <div class="service-block-v8">
+            <i class="fa fa-music"></i>
+            <div class="service-block-desc">
+              <h3>Traditional and Suzuki method</h3>
+              <p>My approach to musical instruction is a combination of the <a href="https://suzukiassociation.org/about/suzuki-method/">Suzuki</a> and traditional methods. I provide specific instruction on how to play the instrument with a better understanding of proper technique, music theory, and musical skill.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="service-block-v8">
+            <i class="fa fa-line-chart"></i>
+            <div class="service-block-desc">
+              <h3>Practice</h3>
+              <p>Regular practice is crucial to any musical growth and in practicing, I hope each student will cultivate a lifelong love for music making and experience the reward of discipline and hard work. I teach my students how to practice and how to get the most out of it.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- End Service Block v8 -->
+
+      <!-- Service Block v8 -->
+      <div class="row margin-bottom-20">
+        <div class="col-sm-6">
+          <div class="service-block-v8">
+            <i class="fa fa-trophy"></i>
+            <div class="service-block-desc">
+              <h3>Performance</h3>
+              <p>Music is meant to be shared with others and it brings joy, beauty, and creativity into our world. Yearly studio recitals allow students to perform the music they have been working on and to share this experience with their friends, family, and community members.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- End Service Block v8 -->
+
+    </div>
+  </div>
+  <!--=== End Service Block ===-->
+
+  <!-- Parallax Section -->
+  <div class="bg-image-v1 parallaxBg">
+    <div class="container">
+      <div class="headline-center headline-light">
+        <h2>STILL HAVE QUESTIONS?</h2>
+        <p>Choosing the <strong>right</strong> teacher to aide you in your musical journey is important and we know how tough it can be to figure that out.<br>We'd love to hear from you and answer any questions you have!<p><br>
+        <a href="{% url 'contact' %}" class="btn-u btn-brd btn-brd-hover btn-u-light">Contact Us</a>
+      </div><!--/end Headline Center-->
+    </div>
+  </div>
+  <!-- End Parallax Section -->
+
+{% endblock %}
