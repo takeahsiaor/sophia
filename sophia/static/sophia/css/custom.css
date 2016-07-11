@@ -50,6 +50,15 @@
   background-position: center center;
 }
 
+/*for trial lesson page*/
+.breadcrumbs-v3.img-v6 {
+  background: linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3) ), url(../DSC_0246.jpg) no-repeat center;
+  /*background: url(../DSC_0310.jpg) no-repeat center;*/
+  background-size: cover;
+  background-position: center center;
+}
+
+
 .form-font {
   font: 13px/1.55 'Open Sans', Helvetica, Arial, sans-serif;
 }
