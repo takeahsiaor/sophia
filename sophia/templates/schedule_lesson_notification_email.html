@@ -5,9 +5,9 @@ Name: {{student_name}}
 Age: {{age}}
 Email: {{email}}
 Phone: {{phone}}
-{% if comments %}Additional info: {{comments}}{% endif %}
+{% if comments %}Additional info: {{comments|safe}}{% endif %}
 
-{% if own_violin %}They have a violin they can use{% else %}They do not currently have a violin{% endif %}
+{% if own_violin %}They have a violin they can use.{% else %}They do not currently have a violin.{% endif %}
 
 
 Follow up with them as soon as possible!
