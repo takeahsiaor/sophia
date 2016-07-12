@@ -47,7 +47,7 @@ INSTALLED_APPS = (
     'easy_thumbnails',
     'sophia',
     # 'schedule',
-    'analytical',
+    # 'analytical',
 )
 
 CKEDITOR_CONFIGS = {
