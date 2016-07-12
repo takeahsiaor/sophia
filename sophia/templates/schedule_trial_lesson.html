@@ -5,6 +5,8 @@ Schedule Trial Lesson
 {% endblock %}
 
 {% block headloaders %}
+  <link rel="stylesheet" href="{% static 'sophia/plugins/cube-portfolio/cubeportfolio/css/cubeportfolio.min.css' %}">
+  <link rel="stylesheet" href="{% static 'sophia/plugins/cube-portfolio/cubeportfolio/custom/custom-cubeportfolio.css' %}">
   <link rel="stylesheet" href="{% static 'sophia/css/pages/pricing/pricing_v6.css' %}">
   <link rel="stylesheet" href="{% static 'sophia/css/pages/pricing/pricing_v7.css' %}">
   <link rel="stylesheet" href="{% static 'sophia/css/pages/pricing/pricing_v8.css' %}">
@@ -242,7 +244,8 @@ Schedule Trial Lesson
 </div>
 {% endblock %}
 
-{% block endloaders %}
+{% block scriptloaders %}
+<script type="text/javascript" src="{% static 'sophia/plugins/cube-portfolio/cubeportfolio/js/jquery.cubeportfolio.min.js' %}"></script>
   <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
   <script type="text/javascript" src="{% static 'sophia/plugins/gmap/gmap.js' %}"></script>
   <script type="text/javascript" src="{% static 'sophia/js/page_contacts.js' %}"></script>
@@ -250,6 +253,9 @@ Schedule Trial Lesson
   <script src="{% static 'sophia/plugins/ladda-buttons/js/spin.min.js'%}"></script>
   <script src="{% static 'sophia/plugins/ladda-buttons/js/ladda.min.js' %}"></script>
   <script type="text/javascript" src="{% static 'sophia/js/plugins/ladda-buttons.js' %}"></script>
+{% endblock %}
+
+{% block endloaders %}
   <script type="text/javascript">
     jQuery(document).ready(function() {
       App.init();

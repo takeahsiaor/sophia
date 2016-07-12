@@ -29,12 +29,6 @@
     <link rel="stylesheet" href="{% static 'sophia/plugins/animate.css' %}">
     <link rel="stylesheet" href="{% static 'sophia/plugins/line-icons/line-icons.css' %}">
     <link rel="stylesheet" href="{% static 'sophia/plugins/font-awesome/css/font-awesome.min.css' %}">
-    <link rel="stylesheet" href="{% static 'sophia/plugins/fancybox/source/jquery.fancybox.css' %}">
-    <link rel="stylesheet" href="{% static 'sophia/plugins/owl-carousel/owl-carousel/owl.carousel.css' %}">
-    <link rel="stylesheet" href="{% static 'sophia/plugins/revolution-slider/rs-plugin/css/settings.css' %}" type="text/css" media="screen">
-    <link rel="stylesheet" href="{% static 'sophia/plugins/cube-portfolio/cubeportfolio/css/cubeportfolio.min.css' %}">
-    <link rel="stylesheet" href="{% static 'sophia/plugins/cube-portfolio/cubeportfolio/custom/custom-cubeportfolio.css' %}">
-    <!--[if lt IE 9]><link rel="stylesheet" href="assets/plugins/revolution-slider/rs-plugin/css/settings-ie8.css" type="text/css" media="screen"><![endif]-->
 
     <!-- CSS Theme -->    
     <link rel="stylesheet" href="{% static 'sophia/css/theme-colors/default.css' %}">
@@ -170,21 +164,6 @@
                     <!-- Social Links -->
                     <div class="col-md-6">
                         <ul class="footer-socials list-inline">
-                            <li>
-                                <a href="#" class="tooltips" data-toggle="tooltip" data-placement="top" title="" data-original-title="Facebook">
-                                    <i class="fa fa-facebook"></i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" class="tooltips" data-toggle="tooltip" data-placement="top" title="" data-original-title="Google Plus">
-                                    <i class="fa fa-google-plus"></i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" class="tooltips" data-toggle="tooltip" data-placement="top" title="" data-original-title="Linkedin">
-                                    <i class="fa fa-linkedin"></i>
-                                </a>
-                            </li>
                         </ul>
                     </div>
                     <!-- End Social Links -->
@@ -201,28 +180,19 @@
 <script type="text/javascript" src="{% static 'sophia/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
 <!-- JS Implementing Plugins -->
 <script type="text/javascript" src="{% static 'sophia/plugins/back-to-top.js' %}"></script>
-<script type="text/javascript" src="{% static 'sophia/plugins/smoothScroll.js' %}"></script>
 <script type="text/javascript" src="{% static 'sophia/plugins/jquery.parallax.js' %}"></script>
-<script type="text/javascript" src="{% static 'sophia/plugins/fancybox/source/jquery.fancybox.pack.js' %}"></script>
-<script type="text/javascript" src="{% static 'sophia/plugins/counter/jquery.counterup.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'sophia/plugins/cube-portfolio/cubeportfolio/js/jquery.cubeportfolio.min.js' %}"></script>
 
-<script type="text/javascript" src="{% static 'sophia/plugins/owl-carousel/owl-carousel/owl.carousel.js' %}"></script>
-<script type="text/javascript" src="{% static 'sophia/plugins/revolution-slider/rs-plugin/js/jquery.themepunch.tools.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'sophia/plugins/revolution-slider/rs-plugin/js/jquery.themepunch.revolution.min.js' %}"></script>
 <!-- JS Customization -->
 <script type="text/javascript" src="{% static 'sophia/js/custom.js' %}"></script>
 <!-- JS Page Level -->           
 <script type="text/javascript" src="{% static 'sophia/js/app.js' %}"></script>
-<script type="text/javascript" src="{% static 'sophia/js/plugins/fancy-box.js' %}"></script>
-<script type="text/javascript" src="{% static 'sophia/js/plugins/revolution-slider.js' %}"></script>
-<script type="text/javascript" src="{% static 'sophia/js/plugins/style-switcher.js' %}"></script>
+
+{% block scriptloaders %}
+{% endblock %}
 <script type="text/javascript">
     jQuery(document).ready(function() {
         App.init();
         App.initParallaxBg();
-        FancyBox.initFancybox();
-        RevolutionSlider.initRSfullWidth();
     });
 </script>
 <!--[if lt IE 9]>

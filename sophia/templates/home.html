@@ -3,6 +3,11 @@
 {% block headtitle %}
 Home
 {% endblock %}
+
+{% block headloaders %}
+    <link rel="stylesheet" href="{% static 'sophia/plugins/revolution-slider/rs-plugin/css/settings.css' %}" type="text/css" media="screen">
+    <!--[if lt IE 9]><link rel="stylesheet" href="assets/plugins/revolution-slider/rs-plugin/css/settings-ie8.css" type="text/css" media="screen"><![endif]-->
+{% endblock %}
 {% block content %}
     <!--=== Slider ===-->
     <div class="tp-banner-container">
@@ -164,6 +169,16 @@ Home
 
 {% endblock %}
 
-{% block endloaders %}
+{% block scriptloaders %}
+<script type="text/javascript" src="{% static 'sophia/plugins/revolution-slider/rs-plugin/js/jquery.themepunch.tools.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'sophia/plugins/revolution-slider/rs-plugin/js/jquery.themepunch.revolution.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'sophia/js/plugins/revolution-slider.js' %}"></script>
+{% endblock %}
 
+{% block endloaders %}
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+        RevolutionSlider.initRSfullWidth();
+    });
+</script>
 {% endblock %}
