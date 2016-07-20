@@ -12,7 +12,9 @@ sophia_start.bat
 
 #Local use
 media/
+Logo/
 *.psd
+todo
 
 # Distribution / packaging
 bin/
