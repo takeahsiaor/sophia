@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-
+{% load thumbnail %}
 {% block headtitle %}
 Blog
 {% endblock %}
@@ -28,7 +28,7 @@ Blog
       <!-- Blog All Posts -->
       <div class="col-md-9">
         <div class="news-v3 bg-color-white margin-bottom-60">
-          <img class="img-responsive full-width" src="{{post.main_image.url}}" alt="">
+          <img class="img-responsive full-width" src="{{post.main_image|thumbnail_url:'blog_main'}}" alt="">
           <div class="news-v3-in">
             <ul class="list-inline posted-info">
               <li>By <a href="#">Sophia Hsiao</a></li>
@@ -54,13 +54,8 @@ Blog
           <div class="blog-author-desc">
             <div class="overflow-h">
               <h4>Sophia Hsiao</h4>
-              <ul class="list-inline">
-                <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
-              </ul>
             </div>
-            <p>Sophia has been teaching violin privately since 2013 and has loved learning more about how to help her students continue to reach their musical goals. <a href="{% url 'bio' %}">See her biography here</a>.</p>
+            <p>Sophia has been teaching violin privately since 2013 and has enjoyed learning more about how to help her students reach their musical goals. <a href="{% url 'bio' %}">See her biography here</a>.</p>
           </div>
         </div>
         <!-- End Blog Post Author -->
@@ -75,9 +70,9 @@ Blog
 
         {% include 'tags_sidebar.html' %}
 
-        <div class="headline-v2"><h2>Newsletter</h2></div>
+        <!-- <div class="headline-v2"><h2>Newsletter</h2></div> -->
         <!-- Blog Newsletter -->
-        <div class="blog-newsletter">
+<!--         <div class="blog-newsletter">
           <p>Subscribe to our newsletter for good news, sent out every month.</p>
           <div class="input-group">
             <input type="text" class="form-control" placeholder="Email">
@@ -85,8 +80,9 @@ Blog
               <button class="btn-u" type="button">Subscribe</button>
             </span>
           </div>
-        </div>
+        </div> -->
         <!-- End Blog Newsletter -->
+
       </div>
       <!-- End Blog Sidebar -->
     </div>

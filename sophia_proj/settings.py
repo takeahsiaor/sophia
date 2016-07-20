@@ -60,18 +60,8 @@ CKEDITOR_CONFIGS = {
 
 THUMBNAIL_ALIASES = {
     '':{
-        'tiny':{'size':(60,60), 'background':'white', 'upscale':True},
-        'small':{'size':(300, 300), 'background':'white','upscale':True},
-        'medium':{'size':(360, 300), 'background':'white', 'upscale':True},
-        'large':{'size':(900, 500), 'background':'white', 'upscale':True},
-        'med-square':{'size':(500, 500), 'background':'white', 'upscale':True},
-        #used for sermonseries page
-        'ss_thumb':{'size':(350,262), 'background':'white', 'upscale':True},
-        #used for sermon series description images
-        'ss_med':{'size':(500,375), 'background':'white', 'upscale':True},
-        'ss_lg':{'size':(1000,750), 'background':'white', 'upscale':True},
-        # 'prayer_calendar_p': {'size':(350,500), 'background':'white', 'upscale':True},
-        'prayer_calendar_l': {'size':(350,500), 'crop':'smart', 'upscale':True}
+        'blog_thumb':{'size':(360, 200), 'background':'white','upscale':True},
+        'blog_main':{'size':(850, 480), 'background':'white', 'upscale':True},
     }
 }
 

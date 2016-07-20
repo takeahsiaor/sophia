@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load thumbnail %}
 {% block headtitle %}
 Home
 {% endblock %}
@@ -109,7 +110,7 @@ Home
           <div class="col-sm-4">
             <div class="thumbnails-v1">
               <div class="thumbnail-img">
-                <a href="{% url 'blog_entry' post.id %}"><img class="img-responsive" src="{{post.main_image.url}}" alt=""></a>
+                <a href="{% url 'blog_entry' post.id %}"><img class="img-responsive" src="{{post.main_image|thumbnail_url:'blog_thumb'}}" alt=""></a>
               </div>
               <div class="caption">
                 <h3><a href="{% url 'blog_entry' post.id">{{post.title}}</a></h3>

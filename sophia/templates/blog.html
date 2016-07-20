@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-
+{% load thumbnail %}
 {% block headtitle %}
 Blog
 {% endblock %}
@@ -38,7 +38,7 @@ Blog
         <!--Blog Post-->
         {% for post in posts %}
           <div class="news-v3 bg-color-white margin-bottom-60">
-            <img class="img-responsive full-width" src="{{post.main_image.url}}" alt="">
+            <img class="img-responsive full-width" src="{{post.main_image|thumbnail_url:'blog_main'}}" alt="">
             <div class="news-v3-in">
               <ul class="list-inline posted-info">
                 <li>By <a href="#">Sophia Hsiao</a></li>
