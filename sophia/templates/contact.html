@@ -155,10 +155,8 @@ Contact Us
 {% endblock %}
 
 {% block scriptloaders %}
-  <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
-  <script type="text/javascript" src="{% static 'sophia/plugins/gmap/gmap.js' %}"></script>
+
   <script type="text/javascript" src="{% static 'sophia/js/app.js' %}"></script>
-  <script type="text/javascript" src="{% static 'sophia/js/page_contacts.js' %}"></script>
   <script src="{% static 'sophia/plugins/ladda-buttons/js/spin.min.js'%}"></script>
   <script src="{% static 'sophia/plugins/ladda-buttons/js/ladda.min.js' %}"></script>
   <script type="text/javascript" src="{% static 'sophia/js/plugins/ladda-buttons.js' %}"></script>
@@ -167,7 +165,26 @@ Contact Us
   <script type="text/javascript">
     jQuery(document).ready(function() {
       App.init();
-      ContactPage.initMap();
     });
+  </script>
+  <script>
+      function initMap() {
+        // Create a map object and specify the DOM element for display.
+        var coords = {lat: 42.054434, lng: -87.988861};
+        var map = new google.maps.Map(document.getElementById('map'), {
+          center: coords,
+          scrollwheel: false,
+          zoom: 15
+        });
+
+        var marker = new google.maps.Marker({
+          position: coords,
+          map: map,
+          title: 'Sophia Hsiao Studio'
+        });
+      }
+  </script>
+  <script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB_juqxOZ5IFB7hK0ZNR7OOyZ8CkMp1j7o&callback=initMap">
   </script>
 {% endblock %}
