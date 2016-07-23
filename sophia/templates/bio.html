@@ -76,7 +76,7 @@ Biography |
               <a href="{% url 'blog_entry' post.id %}"><img class="img-responsive" src="{{post.main_image.url}}" alt=""></a>
             </div>
             <div class="caption">
-              <h3><a href="{% url 'blog_entry' post.id">{{post.title}}</a></h3>
+              <h3><a href="{% url 'blog_entry' post.id %}">{{post.title}}</a></h3>
               <p>{{post.content|safe|truncatewords_html:50}}</p>
               <p><a class="read-more" href="{% url 'blog_entry' post.id %}">See More</a></p>
             </div>
