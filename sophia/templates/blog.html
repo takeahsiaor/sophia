@@ -54,7 +54,7 @@ Blog |
                 <li>Posted {{post.created_on}}</li>
               </ul>
               <h2><a href="{% url 'blog_entry' post.id %}">{{post.title}}</a></h2>
-              <p>{{post.content|safe|truncatewords_html:200}}</p>
+              <p>{{post.content|safe|truncatewords_html:150}}</p>
               <p><a class="btn-u btn-u-small" href="{% url 'blog_entry' post.id %}"><i class="fa fa-plus-sign"></i> Read More</a></p>
             </div>
           </div>

@@ -1,12 +1,22 @@
-from django.views.generic import TemplateView
+import views
+from captcha import urls as captcha_urls
+from ckeditor import urls as ckeditor_urls
+
+from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
-from django.conf import settings
-import views
-from ckeditor import urls as ckeditor_urls
-from captcha import urls as captcha_urls
+from django.contrib.sitemaps.views import sitemap
+from django.views.generic import TemplateView
+
+from .sitemap import StaticViewSitemap, BlogSitemap
+
+sitemaps = {
+    'static': StaticViewSitemap,
+    'blog': BlogSitemap
+}
 
 urlpatterns = [
+    url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps}),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^ckeditor/', include(ckeditor_urls)),
     url(r'^captcha/', include(captcha_urls)),
