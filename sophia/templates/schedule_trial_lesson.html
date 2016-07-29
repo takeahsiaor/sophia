@@ -90,7 +90,7 @@ Schedule Trial Violin Lesson | Sophia Hsiao Studio
                         <hr>
                         <p>Select a date below:</p>
                         {% for date in trial_lesson.lesson_dates %}
-                          <a class="btn-brd btn-u select-date" style="display:block;" data-toggle="modal" data-target="#responsive" data-date="{{date}}" data-time-slot-pk="{{trial_lesson.timeslot.pk }}" data-time-slot-day="{{trial_lesson.timeslot.day}}" data-time-slot-start="{{trial_lesson.timeslot.start_time}}" data-time-slot-end="{{trial_lesson.timeslot.end_time}}">{{date}}</a><br>
+                          <a class="btn-brd btn-u select-date" style="display:block;" data-toggle="modal" data-target="#responsive" data-date="{{date}}" data-time-slot-pk="{{trial_lesson.timeslot.pk }}" data-time-slot-day="{{trial_lesson.timeslot.get_day_display}}" data-time-slot-start="{{trial_lesson.timeslot.start_time}}" data-time-slot-end="{{trial_lesson.timeslot.end_time}}">{{date}}</a><br>
                         {% endfor %}
                       </div>
                     </div>

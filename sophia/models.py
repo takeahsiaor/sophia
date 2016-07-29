@@ -111,13 +111,13 @@ class Timeslot(models.Model):
     flag on future ScheduledLesson objects
     """
     DAYS_OF_WEEK = (
-        ('1', 'Monday'),
-        ('2', 'Tuesday'),
-        ('3', 'Wednesday'),
-        ('4', 'Thursday'),
-        ('5', 'Friday'),
-        ('6', 'Saturday'),
-        ('7', 'Sunday'),
+        ('0', 'Monday'),
+        ('1', 'Tuesday'),
+        ('2', 'Wednesday'),
+        ('3', 'Thursday'),
+        ('4', 'Friday'),
+        ('5', 'Saturday'),
+        ('6', 'Sunday'),
     )
     start_time = models.TimeField()
     end_time = models.TimeField()
@@ -133,8 +133,7 @@ class Timeslot(models.Model):
         while not found_first_date:
             day_of_week_index = calendar.weekday(
                 first_date.year, first_date.month, first_date.day)
-            day_abbrev = self.DAYS_OF_WEEK[day_of_week_index][0]
-            if day_abbrev == self.day:
+            if str(day_of_week_index) == self.day:
                 found_first_date = True
                 break
             first_date = first_date + datetime.timedelta(days=1)
@@ -142,16 +141,17 @@ class Timeslot(models.Model):
         dates = []
         for i in range(1, weeks+1):
             date = first_date + datetime.timedelta(days=7*i)
-            dates.append(date)
+            dates.append(date.strftime('%B %d, %Y'))
         return dates
 
     def date_in_timeslot(self, date):
         # Checks that the date does in fact fit in the timeslot
+        date = date.strftime('%B %d, %Y')
         dates = self.get_lesson_dates()
         return date in dates
 
     def __unicode__(self):
-        return '%s from %s to %s' % (self.day, self.start_time, self.end_time)
+        return '%s from %s to %s' % (self.get_day_display(), self.start_time, self.end_time)
 
 class ScheduledLesson(models.Model):
     """

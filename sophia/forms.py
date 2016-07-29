@@ -73,6 +73,7 @@ class ScheduleTrialLessonForm(forms.Form):
     )
     age = forms.CharField(label="Student Age", required=True,)
     own_violin = forms.BooleanField(
+        required=False,
         label="Check if you currently have a violin to use",
         widget=forms.CheckboxInput(attrs={}))
     comments = forms.CharField(label='Additional Info',
@@ -94,13 +95,14 @@ class ScheduleTrialLessonForm(forms.Form):
         comments = self.cleaned_data.get('comments', '')
         timeslot = self.cleaned_data['timeslot']
         date = self.cleaned_data['date']
+        day = timeslot.get_day_display()
 
         subject_str = "Trial lesson scheduled for %s, %s" % (
-            timeslot.day, date.strftime('%B %d, %Y')
+            day, date.strftime('%B %d, %Y')
         )
         context = {'student_name':student_name, 'email':email, 'phone':phone,
                     'age':age, 'own_violin':own_violin, 'comments':comments,
-                    'date':date, 'timeslot':timeslot}
+                    'date':date, 'timeslot':timeslot, 'day': day}
         body = render_to_string(
             'schedule_lesson_notification_email.html', context)
 
@@ -132,7 +134,7 @@ class ScheduleTrialLessonForm(forms.Form):
         # ensure that the timeslot and date match up and weren't tampered with
         timeslot = timeslots[0]
         if not timeslot.date_in_timeslot(date):
-            raise form.ValidationError("Sorry! Something went wrong. Please "
+            raise forms.ValidationError("Sorry! Something went wrong. Please "
                 "select a new time and try again")
 
         # Add the timeslot object to the cleaned data

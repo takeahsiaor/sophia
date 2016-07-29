@@ -67,13 +67,13 @@ class ScheduleTrialLessonView(FormView):
     success_url = reverse_lazy('schedule_trial_lesson')
 
     COLOR_CLASSES = {
-        '1': 'u',
-        '2': 'sea',
-        '3': 'blue',
-        '4': 'orange',
-        '5': 'purple',
-        '6': 'dark-blue',
-        '7': 'dark'
+        '0': 'u',
+        '1': 'sea',
+        '2': 'blue',
+        '3': 'orange',
+        '4': 'purple',
+        '5': 'dark-blue',
+        '6': 'dark'
     }
 
     def form_valid(self, form):
