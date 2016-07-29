@@ -11,6 +11,7 @@ class TestimonialAdmin(admin.ModelAdmin):
 class TimeslotAdmin(admin.ModelAdmin):
     model = Timeslot
     list_display = ('start_time', 'end_time', 'day', 'available')
+    ordering = ('day', 'start_time')
 
 class BlogPostAdmin(admin.ModelAdmin):
     list_display = ('title', 'created_on', 'updated_on',)

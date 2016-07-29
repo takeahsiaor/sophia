@@ -93,7 +93,7 @@ class ScheduleTrialLessonView(FormView):
 
     def get_context_data(self, **kwargs):
         context = super(ScheduleTrialLessonView, self).get_context_data(**kwargs)
-        timeslots = Timeslot.objects.filter(available=True)
+        timeslots = Timeslot.objects.filter(available=True).order_by('start_time')
         trial_lessons = []
         for timeslot in timeslots:
             lesson_dates = timeslot.get_lesson_dates()
