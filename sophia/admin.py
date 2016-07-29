@@ -6,7 +6,7 @@ from sophia.models import Testimonial, PageText, Timeslot, BlogPost, BlogTag
 class TestimonialAdmin(admin.ModelAdmin):
     model = Testimonial
 
-    list_display = ('client_name', 'text', 'start_date', 'end_date')
+    list_display = ('client_name', 'text', 'start_year', 'end_year')
 
 class TimeslotAdmin(admin.ModelAdmin):
     model = Timeslot

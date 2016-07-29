@@ -73,8 +73,8 @@ class BlogPost(models.Model):
 
 class Testimonial(models.Model):
     client_name = models.CharField(max_length=255)
-    start_date = models.DateField()
-    end_date = models.DateField(blank=True, null=True)
+    start_year = models.CharField(max_length=4)
+    end_year = models.CharField(blank=True, null=True, max_length=4)
     text = models.TextField()
     priority = models.BooleanField(
                         default=False,
