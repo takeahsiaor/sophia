@@ -38,7 +38,7 @@ Testimonials | Sophia Hsiao Studio
             </div>
             <span class="testimonials-author">
               {{testimonial.client_name}}<br>
-              <em>{{testimonial.start_date}} to {{testimonial.end_date}}</em>
+              <em>With Sophia Hsiao Studio {% if not testimonial.end_year %}since{% else %}from{% endif %} {{testimonial.start_year}}{% if testimonial.end_year %} to {{testimonial.end_year}}{% endif %}</em>
             </span>
           </div>
         </div>
