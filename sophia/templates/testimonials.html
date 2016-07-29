@@ -1,9 +1,11 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block headtitle %}
-Testimonials | 
+Testimonials | Sophia Hsiao Studio
 {% endblock %}
-
+{% block meta %}
+  <meta name="description" content="Testimonials from the students and their parents of violin lessons with Sophia Hsiao Studio">
+{% endblock %}
 {% block content %}
 <!--=== Breadcrumbs v3 ===-->
 <div class="breadcrumbs-v3 img-v5 text-center">
@@ -22,7 +24,7 @@ Testimonials |
 <div class="bg-color-light">
   <div class="container content-md">
     <div class="headline-center margin-bottom-60">
-      <h2>WHAT STUDENTS SAY ABOUT SOPHIA</h2>
+      <h2>WHAT STUDENTS SAY ABOUT VIOLIN LESSONS WITH SOPHIA</h2>
     </div>
 
       {% for testimonial in testimonials %}

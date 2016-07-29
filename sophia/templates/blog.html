@@ -2,9 +2,11 @@
 {% load static %}
 {% load thumbnail %}
 {% block headtitle %}
-Blog | 
+Blog | Sophia Hsiao Studio
 {% endblock %}
-
+{% block meta %}
+  <meta name="description" content="Latest news and thoughts about violin lessons, practicing, and music from Sophia Hsiao Studio.">
+{% endblock %}
 {% block headloaders %}
   <link rel="stylesheet" href="{% static 'sophia/css/pages/blog.css' %}">
   <link rel="stylesheet" href="{% static 'sophia/css/pages/blog_magazine.css' %}">

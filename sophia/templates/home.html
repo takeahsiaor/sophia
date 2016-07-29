@@ -2,10 +2,19 @@
 {% load static %}
 {% load thumbnail %}
 
+{% block headtitle %}
+Sophia Hsiao Studio - Private Violin Lessons in Arlington Heights
+{% endblock %}
+
 {% block headloaders %}
     <link rel="stylesheet" href="{% static 'sophia/plugins/revolution-slider/rs-plugin/css/settings.css' %}" type="text/css" media="screen">
     <!--[if lt IE 9]><link rel="stylesheet" href="assets/plugins/revolution-slider/rs-plugin/css/settings-ie8.css" type="text/css" media="screen"><![endif]-->
 {% endblock %}
+
+{% block meta %}
+  <meta name="description" content="Sophia Hsiao Studio provides private violin lessons for children and adults using the Suzuki method in Arlington Heights.">
+{% endblock %}
+
 {% block content %}
     <!--=== Slider ===-->
     <div class="tp-banner-container">
@@ -57,7 +66,7 @@
                         data-captionhidden="off"
                         style="z-index: 6">
                         <a href="{% url 'bio' %}" class="btn-u btn-brd btn-brd-hover btn-u-light">About Sophia</a>
-                        <a href="{% url 'schedule_trial_lesson' %}" class="btn-u">Schedule a free lesson</a>
+                        <a href="{% url 'schedule_trial_lesson' %}" class="btn-u">Schedule a free violin lesson</a>
                     </div>
                 </li>
                 <!-- END SLIDE -->
@@ -80,13 +89,12 @@
             <div class="col-md-4 content-boxes-v6">
                 <i class="rounded-x fa fa-music"></i>
                 <h2 class="title-v3-md text-uppercase margin-bottom-10">Suzuki Method</h2>
-                <p>We employ the <a target="_blank" href="https://suzukiassociation.org/about/suzuki-method/">Suzuki method</a> of teaching, which emphasizes hands on learning, comfort with the instrument, and parental involvement with children. From child to adult, we believe anyone can learn the violin.
-                Whether you're a beginner or more advanced, our violin lessons are catered towards achieving your musical goals.</p>
+                <p>We employ the <a target="_blank" href="https://suzukiassociation.org/about/suzuki-method/">Suzuki method</a> of teaching in our violin lessons, which emphasizes hands on learning, comfort with the instrument, and parental involvement with children. From child to adult, we believe anyone can learn the violin. Whether you're a beginner or more advanced, our violin lessons are catered towards achieving your musical goals.</p>
             </div>
             <div class="col-md-4 content-boxes-v6">
                 <i class="rounded-x fa fa-gift"></i>
-                <h1 class="title-v3-md text-uppercase margin-bottom-10">Free Trial Lesson</h1>
-                <p>We offer a free, thirty minute, trial violin lesson to help you see if we are the right violin studio for you. If, after the trial lesson, you decide not to continue with us, there's absolutely no obligation. <a href="{% url 'schedule_trial_lesson' %}">Schedule your free trial violin lesson today</a>!</p>
+                <h1 class="title-v3-md text-uppercase margin-bottom-10">Free Trial Violin Lesson</h1>
+                <p>We offer a free, thirty minute, trial violin lesson to help you see if we are the right violin studio for you. If, after the trial violin lesson, you decide not to continue with us, there's absolutely no obligation. <a href="{% url 'schedule_trial_lesson' %}">Schedule your free trial violin lesson today</a>!</p>
             </div>
         </div><!--/row-->
     </div><!--/container-->
@@ -130,7 +138,7 @@
             <h2>WHAT PEOPLE SAY</h2>
             <span class="bordered-icon"><i class="fa fa-th-large"></i></span>
             <p>Here is what actual students and parents of students say about
-              working with Sophia.<br>
+              violin lessons with Sophia.<br>
               Want to see more? Check out our <a href="{% url 'testimonials' %}">Testimonial Page</a>
             </p>
           </div><!--/Headline Center v2-->

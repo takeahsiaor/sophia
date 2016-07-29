@@ -1,9 +1,11 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block headtitle %}
-Contact Us | 
+Contact Us | Sophia Hsiao Studio
 {% endblock %}
-
+{% block meta %}
+  <meta name="description" content="Contact Sophia Hsiao Studio for all inquiries about violin lessons in Arlington Heights">
+{% endblock %}
 {% block headloaders %}
 <link rel="stylesheet" href="{% static 'sophia/plugins/sky-forms-pro/skyforms/css/sky-forms.css' %}">
 <link rel="stylesheet" href="{% static 'sophia/plugins/sky-forms-pro/skyforms/custom/custom-sky-forms.css' %}">
@@ -41,11 +43,11 @@ Contact Us |
   <div class="row margin-bottom-30">
     <div class="col-md-9 mb-margin-bottom-30">
       <div class="headline"><h2>Contact Form</h2></div>
-      <p>Whether you have an inquiry or just want to drop us a line, 
+      <p>Whether you have an inquiry about violin lessons in Arlington Heights or just want to drop us a line, 
         we'd love to hear from you! Simply fill out the form
         below with some basic info to send us a message.</p>
       <div class="tag-box tag-box-v2">
-        <p>Wanting to schedule a free trial lesson? Check out our <a href="{% url 'schedule_trial_lesson' %}">scheduling page</a>. It lets you know what our
+        <p>Wanting to schedule a free trial violin lesson? Check out our <a href="{% url 'schedule_trial_lesson' %}">scheduling page</a>. It lets you know what our
           available time slots are and makes scheduling
           a cinch! <br><br>
           Don't see a time that works there? Let us know what time
@@ -140,9 +142,9 @@ Contact Us |
       <!-- Contacts -->
       <div class="headline"><h2>Where we are</h2></div>
       <p>Since violin lessons are held in our home, the map above shows our approximate
-        location. We are a block away from Juliette Low Elementary School in Arlington Heights, IL (<a target="_blank" href="https://goo.gl/maps/zhes9uXMP4P2">Google Maps</a>)
+        location. We are a block away from Juliette Low Elementary School in Arlington Heights, IL, just minutes away from Mount Prospect, Elk Grove Village, and Schaumburg (<a target="_blank" href="https://goo.gl/maps/zhes9uXMP4P2">Google Maps</a>)
         <br><br>
-        Should you decide to schedule lessons, our address will be provided
+        Should you decide to schedule violin lessons, our address will be provided
         to you. 
         <br><br>
         We apologize for any inconvenience this may cause.

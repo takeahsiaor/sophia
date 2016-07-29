@@ -3,13 +3,13 @@
 <!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->  
 <!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->  
 <head>
-    <title>{% block headtitle %}{% endblock %}Sophia Hsiao Studio - Violin Lessons in Arlington Heights</title>
+    <title>{% block headtitle %}{% endblock %}</title>
     {% load staticfiles %}
     <!-- Meta -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Sophia Hsiao Studio provides private violin lessons for children and adults using the Suzuki method.">
-    <meta name="keywords" content="Private Violin Lessons, Violin Lessons, Violin Lessons Arlington Heights, Violin Lessons Mount Prospect, Violin Lessons Elk Grove Village, Violin Lessons Schaumburg, Suzuki, Beginner"
+    {% block meta %}
+    {% endblock %}
     <meta name="author" content="Ron Hsiao">
 
     <!-- Favicon -->

@@ -2,11 +2,10 @@
 {% load static %}
 {% load thumbnail %}
 {% block headtitle %}
-{{post.title}} | 
+{{post.title}} | Sophia Hsiao Studio
 {% endblock %}
-
-{% block headloaders %}
-
+{% block meta %}
+  <meta name="description" content="{{post.title}}">
 {% endblock %}
 
 {% block content %}
