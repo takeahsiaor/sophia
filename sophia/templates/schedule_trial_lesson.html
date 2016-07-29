@@ -79,7 +79,7 @@ Schedule Trial Violin Lesson | Sophia Hsiao Studio
 
       <div id="grid-container" class="cbp-l-grid-agency">
         {% for trial_lesson in trial_lessons %}
-          <div class="cbp-item {{trial_lesson.timeslot.day}}">
+          <div class="cbp-item {{trial_lesson.timeslot.get_day_display}}">
             <div class="cbp-caption">
               <div class="cbp-caption-defaultWrap">
                     <div class="pricing-table-v6">
