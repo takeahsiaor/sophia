@@ -67,13 +67,13 @@ class ScheduleTrialLessonView(FormView):
     success_url = reverse_lazy('schedule_trial_lesson')
 
     COLOR_CLASSES = {
-        'Monday': 'u',
-        'Tuesday': 'sea',
-        'Wednesday': 'blue',
-        'Thursday': 'orange',
-        'Friday': 'purple',
-        'Saturday': 'dark-blue',
-        'Sunday': 'dark'
+        '1': 'u',
+        '2': 'sea',
+        '3': 'blue',
+        '4': 'orange',
+        '5': 'purple',
+        '6': 'dark-blue',
+        '7': 'dark'
     }
 
     def form_valid(self, form):
@@ -93,7 +93,7 @@ class ScheduleTrialLessonView(FormView):
 
     def get_context_data(self, **kwargs):
         context = super(ScheduleTrialLessonView, self).get_context_data(**kwargs)
-        timeslots = Timeslot.objects.filter(available=True).order_by('start_time')
+        timeslots = Timeslot.objects.filter(available=True).order_by('day', 'start_time')
         trial_lessons = []
         for timeslot in timeslots:
             lesson_dates = timeslot.get_lesson_dates()
