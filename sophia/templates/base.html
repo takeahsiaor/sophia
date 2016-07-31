@@ -11,7 +11,7 @@
     {% block meta %}
     {% endblock %}
     <meta name="author" content="Ron Hsiao">
-    <meta property="og:image" content="{% static 'sophia/logo_reverse.jpg' %}" />
+    <meta property="og:image" content="{{request.get_host}}{% static 'sophia/logo_reverse.jpg' %}" />
     <!-- Favicon -->
     <link rel="shortcut icon" href="{% static 'sophia/shs_favicon.ico' %}">
 
