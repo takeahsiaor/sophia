@@ -5,6 +5,7 @@ from ckeditor import urls as ckeditor_urls
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
+from django.contrib.auth.decorators import login_required
 from django.contrib.sitemaps.views import sitemap
 from django.views.generic import TemplateView
 
@@ -28,7 +29,14 @@ urlpatterns = [
     url(r'^contact/$', views.ContactView.as_view(), name='contact'),
     url(r'^schedule-trial-lesson/$', views.ScheduleTrialLessonView.as_view(),
         name='schedule_trial_lesson'),
-    
+    url(r'^scheduled-lessons/$',
+        login_required(views.ScheduledLessonsView.as_view()),
+        name='scheduled_lessons'
+    ),
+    url(r'^update-scheduled-lesson/$',
+        login_required(views.ScheduledLessonsAPI.as_view()),
+        name='scheduled_lessons_api'
+    ),
     url(r'^blog/$', views.BlogHome.as_view(), name='blog'),
     url(r'^blog/entry/(?P<post_id>\d+)/$', views.BlogEntry.as_view(), name='blog_entry'),
     url(r'^blog/tag/(?P<tag_id>\d+)/$', views.BlogByTag.as_view(), name='blog_by_tag'),

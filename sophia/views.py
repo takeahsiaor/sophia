@@ -1,18 +1,19 @@
 import datetime
+import dateutil.parser
 
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Q
-from django.views.generic import TemplateView, FormView
+from django.views.generic import TemplateView, FormView, ListView, View
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from django.contrib import messages
 from django.core.urlresolvers import reverse_lazy, reverse
-from sophia.forms import ContactForm, ScheduleTrialLessonForm
+from sophia.forms import ContactForm, ScheduleTrialLessonForm, ScheduleLessonForm
 from sophia.models import (
     ScheduledLesson,
+    Student,
     Testimonial,
-    Timeslot,
     BlogPost,
     BlogTag,
 )
@@ -61,6 +62,122 @@ class ContactView(FormView):
         return super(ContactView, self).form_valid(form)
 
 
+class ScheduledLessonsView(TemplateView):
+    template_name = 'scheduled_lessons.html'
+
+    def get_context_data(self):
+        context = super(ScheduledLessonsView, self).get_context_data()
+        now = datetime.date.today()
+        start = datetime.date(year=now.year, month=now.month, day=1)
+        lessons_qs = ScheduledLesson.objects.filter(date__gte=start)
+        context['form'] = ScheduleLessonForm()
+        return context
+
+
+class ScheduledLessonsAPI(View):
+    '''
+    View for interacting and updating the scheduled lessons
+    '''
+    CANCEL = 'cancel'
+    COMPLETE = 'complete'
+    RESCHEDULE = 'reschedule'
+    CREATE = 'create'
+    UPDATE_TIMES = 'update_times'
+    DELETE = 'delete'
+    GENERATE = 'generate'
+
+    def get(self, request):
+        start_str = request.GET.get('start')
+        end_str = request.GET.get('end')
+        start = datetime.datetime.strptime(start_str, '%Y-%m-%d')
+        end = datetime.datetime.strptime(end_str, '%Y-%m-%d')
+        lessons = ScheduledLesson.objects.filter(
+            date__gte=start
+        ).filter(
+            date__lte=end
+        )
+        return HttpResponse(
+            lessons.as_json()
+        )
+
+    def post(self, request):
+        action = self.request.POST.get('action')
+        if action == self.CREATE:
+            start_string = request.POST.get('start_string')
+            end_string = request.POST.get('end_string')
+            student_pk = request.POST.get('student')
+            start_datetime = dateutil.parser.parse(start_string)
+            end_datetime = dateutil.parser.parse(end_string)
+
+            date = start_datetime.date()
+            start_time = start_datetime.time()
+            end_time = end_datetime.time()
+            day = start_datetime.weekday()
+
+            student = get_object_or_404(Student, pk=student_pk)
+            lesson = ScheduledLesson.objects.create(
+                date=date,
+                start_time=start_time,
+                end_time=end_time,
+                student=student,
+                is_trial=False,
+                is_reschedule=True
+            )
+            return HttpResponse()
+        elif action == self.GENERATE:
+            start_string = request.POST.get('start_string')
+            start_datetime = dateutil.parser.parse(start_string)
+            end_string = request.POST.get('end_string')
+            end_datetime = dateutil.parser.parse(end_string)
+
+            first_of_months = set()
+            date = start_datetime
+            # Get all the datetimes representing the first of month between
+            # the start and end datetime.
+            while date < end_datetime:
+                first_of_month = datetime.date(day=1, month=date.month, year=date.year)
+                first_of_months.add(first_of_month)
+                date = date + datetime.timedelta(weeks=1)
+            final_first_of_month = datetime.date(
+                day=1, month=end_datetime.month, year=end_datetime.year
+            )
+            first_of_months.add(final_first_of_month)
+            students = Student.objects.filter(active=True, is_trial=False)
+            for student in students:
+                for date in first_of_months:
+                    student.generate_lessons_for_month(date.month, date.year)
+            return HttpResponse()
+        else:
+            lesson_pk = request.POST.get('pk')
+            lesson = get_object_or_404(ScheduledLesson, pk=lesson_pk)
+            if action == self.COMPLETE:
+                lesson.completed_on = datetime.datetime.now()
+                lesson.save()
+            elif action == self.CANCEL:
+                lesson.cancelled_on = datetime.datetime.now()
+                lesson.save()
+            elif action == self.RESCHEDULE:
+                lesson.rescheduled_on = datetime.datetime.now()
+                lesson.save()
+            elif action == self.UPDATE_TIMES:
+                start_string = request.POST.get('start_string')
+                end_string = request.POST.get('end_string')
+                start_datetime = dateutil.parser.parse(start_string)
+                end_datetime = dateutil.parser.parse(end_string)
+                date = start_datetime.date()
+                lesson.date = date
+                lesson.start_time = start_datetime.time()
+                lesson.end_time = end_datetime.time()
+                lesson.save()
+            elif action == self.DELETE:
+                if lesson.is_reschedule:
+                    # Prevent the normal lesson times from getting deleted
+                    # Those should be rescheduled instead and you should only
+                    # be able to delete makeup lessons
+                    lesson.delete()
+            return HttpResponse()
+
+
 class ScheduleTrialLessonView(FormView):
     template_name = 'schedule_trial_lesson.html'
     form_class = ScheduleTrialLessonForm
@@ -79,13 +196,15 @@ class ScheduleTrialLessonView(FormView):
     def form_valid(self, form):
         success_message = """Thank you for scheduling your free lesson! We will
             be in touch with you shortly!"""
-        timeslot = form.cleaned_data['timeslot']
+        student = form.cleaned_data['student']
         ScheduledLesson.objects.create(
             date=form.cleaned_data['date'],
-            timeslot=timeslot
+            student=student,
+            is_trial=True,
+            is_reschedule=False
         )
-        timeslot.available = False
-        timeslot.save()
+        student.is_held = True
+        student.save()
         form.send_notification()
         messages.success(self.request, success_message)
 
@@ -93,15 +212,18 @@ class ScheduleTrialLessonView(FormView):
 
     def get_context_data(self, **kwargs):
         context = super(ScheduleTrialLessonView, self).get_context_data(**kwargs)
-        timeslots = Timeslot.objects.filter(available=True).order_by('day', 'start_time')
+        students = Student.objects.filter(
+            is_trial=True,
+            is_held=False
+        ).order_by('day', 'start_time')
         trial_lessons = []
-        for timeslot in timeslots:
-            lesson_dates = timeslot.get_lesson_dates()
+        for student in students:
+            lesson_dates = student.get_lesson_dates()
             trial_lessons.append(
                 {
-                    'timeslot':timeslot, 
+                    'student':student, 
                     'lesson_dates': lesson_dates,
-                    'color_class': self.COLOR_CLASSES[timeslot.day]
+                    'color_class': self.COLOR_CLASSES[student.day]
                 }
             )
         context['trial_lessons'] = trial_lessons

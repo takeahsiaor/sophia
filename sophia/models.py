@@ -1,5 +1,10 @@
 import datetime, calendar
+import json
+
+from collections import OrderedDict
+
 from django.db import models
+from django.db.models import Q
 from django.db.models.fields.files import ImageFieldFile, ImageField
 
 from ckeditor.fields import RichTextField
@@ -62,7 +67,7 @@ class BlogPost(models.Model):
     title = models.CharField(max_length=255)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
-    tags = models.ManyToManyField(BlogTag, blank=True, null=True)
+    tags = models.ManyToManyField(BlogTag)
     content = RichTextField()
 
     def clean(self):
@@ -84,6 +89,7 @@ class Testimonial(models.Model):
     def __unicode__(self):
         return "%s testimonial" % self.client_name
 
+
 class PageText(models.Model):
     """
     A Page text represents the text on a page. Each view will query for a
@@ -94,22 +100,128 @@ class PageText(models.Model):
     page_name = models.CharField(max_length=255)
     text = RichTextField()
 
-class Timeslot(models.Model):
+
+class ScheduledLessonQuerySet(models.QuerySet):
+    def filter_by_month(self, month_index, year):
+        start_date = datetime.date(day=1, month=month_index, year=year)
+        if month_index == 12:
+            end_month = 1
+            end_year = year + 1
+        else:
+            end_month = month_index + 1
+            end_year = year
+        end_date = datetime.date(day=1, month=end_month, year=end_year)
+        return self.filter(date__gte=start_date).filter(date__lt=end_date)
+
+    def group_by_date(self):
+        lessons_dict = OrderedDict()
+        dates = self.values_list('date', flat=True).order_by('date').distinct()
+        for date in dates:
+            lessons_dict[date] = []
+
+        for lesson in self:
+            lessons_dict[lesson.date].append(lesson)
+        return lessons_dict
+
+    def as_json(self):
+        # might be easier just to use DRF serializers
+        data = []
+        for lesson in self:
+            student = lesson.student
+            if student:
+                student_name = student.full_name()
+            else:
+                student_name = 'Free Trial Lesson'
+
+            # Instead of this big conditional, make a get_state method
+            # on Scheduled Lesson and build a color mapping dict between
+            # state and color.
+            # blue
+            color = '#539ce7'
+            if lesson.is_completed:
+                # green
+                color = '#87b667'
+            elif lesson.is_cancelled:
+                # red
+                color = '#cf6a6a'
+            elif lesson.is_rescheduled:
+                # gray
+                color = '#b0b0b0'
+            lesson_data = {
+                'start': lesson.get_start_time_string(),
+                'end': lesson.get_end_time_string(),
+                'day': lesson.student.get_day_display(),
+                'title' : student_name,
+                'pk': lesson.pk,
+                'color': color,
+                'date': lesson.date.strftime('%B %d, %Y'),
+                'pending': lesson.is_pending,
+                'is_reschedule': lesson.is_reschedule
+            }
+            data.append(lesson_data)
+        return json.dumps(data)
+
+
+class ScheduledLessonManager(models.Manager):
+    def get_queryset(self):
+        return ScheduledLessonQuerySet(self.model, using=self._db)
+
+    def filter_by_month(self, month_index, year):
+        return self.get_queryset().filter_by_month(month_index, year)
+
+class ScheduledLesson(models.Model):
     """
-    Represents a weekly available timeslot open to a new student
-    Kept general to day of week and time but not date
+    Represents the actual weekly instance of a lesson.
 
-    Need to distinguish between different "taken" slots.
-    A slot can be taken by a free one time lesson. Scheduled lessons therefore
-    should not be displayed to potential students
+    Unpersisted versions are presented to the user and only given a pk when
+    a user schedules.
 
-    Also can be taken by a weekly lesson. Scheduled lessons should not be
-    shown to potential students but they should be shown to admin for current
-    full time students
-
-    This is facilitated by checking the scheduledlesson_set for the is_trial 
-    flag on future ScheduledLesson objects
+    Up to us then to make it available if a trial lesson isn't converted to a full
+    time student
     """
+    date = models.DateField()
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    student = models.ForeignKey('Student')
+    is_trial = models.BooleanField(default=False)
+    is_reschedule = models.BooleanField(default=False)
+    completed_on = models.DateTimeField(blank=True, null=True)
+    cancelled_on = models.DateTimeField(blank=True, null=True)
+    rescheduled_on = models.DateTimeField(blank=True, null=True)
+
+    objects = ScheduledLessonManager()
+
+    @property
+    def is_completed(self):
+        return bool(self.completed_on)
+
+    @property
+    def is_cancelled(self):
+        return bool(self.cancelled_on)
+
+    @property
+    def is_rescheduled(self):
+        return bool(self.rescheduled_on)
+
+    @property
+    def is_pending(self):
+        return bool(
+            not self.rescheduled_on and not self.cancelled_on and not self.completed_on
+        )
+
+    def get_start_time_string(self):
+        dt = datetime.datetime.combine(self.date, self.start_time)
+        return dt.isoformat() 
+
+    def get_end_time_string(self):
+        dt = datetime.datetime.combine(self.date, self.end_time)
+        return dt.isoformat() 
+
+    def __unicode__(self):
+        return '%s, %s' % (self.date, self.student)
+
+
+class Student(models.Model):
     DAYS_OF_WEEK = (
         ('0', 'Monday'),
         ('1', 'Tuesday'),
@@ -119,12 +231,34 @@ class Timeslot(models.Model):
         ('5', 'Saturday'),
         ('6', 'Sunday'),
     )
+
+    first_name = models.CharField(max_length=47)
+    last_name = models.CharField(max_length=47)
+    contact_email = models.EmailField(max_length=75)
+
     start_time = models.TimeField()
     end_time = models.TimeField()
     day = models.CharField(max_length=9, choices=DAYS_OF_WEEK)
-    available = models.BooleanField(default=True)
+
+    period = models.IntegerField(default=1)  # how many weeks apart are lessons?
+    active = models.BooleanField(default=True)
+    is_trial = models.BooleanField(default=False)  # trial lesson yet to be scheduled
+    is_held = models.BooleanField(default=False)  # trial lesson that's scheduled
+    rate = models.DecimalField(decimal_places=2, max_digits=5)
+
+    def full_name(self):
+        return '%s %s' % (self.first_name, self.last_name)
+
+    def date_in_timeslot(self, date):
+        # Checks that the date does in fact fit in the timeslot
+        date = date.strftime('%B %d, %Y')
+        dates = self.get_lesson_dates()
+        return date in dates
 
     def get_lesson_dates(self, weeks=2):
+        '''
+        Used to get the lesson dates from day of week
+        '''
         # Must give at least a day's notice
         now = datetime.date.today() + datetime.timedelta(days=1)
         found_first_date = False
@@ -139,37 +273,76 @@ class Timeslot(models.Model):
             first_date = first_date + datetime.timedelta(days=1)
 
         dates = []
-        for i in range(1, weeks+1):
+        for i in range(weeks):
             date = first_date + datetime.timedelta(days=7*i)
             dates.append(date.strftime('%B %d, %Y'))
         return dates
 
-    def date_in_timeslot(self, date):
-        # Checks that the date does in fact fit in the timeslot
-        date = date.strftime('%B %d, %Y')
-        dates = self.get_lesson_dates()
-        return date in dates
+    def get_lesson_dates_in_month(self, month, year):
+        '''
+        Will be used to generate the scheduledlessons for a student
+        Interval represents how many weeks between each lesson
+        '''
+        first_of_month = datetime.date(month=month, year=year, day=1)
+        found_first_date = False
+        first_date = first_of_month
+        # get the first date that matches the day of the week
+        while not found_first_date:
+            day_of_week_index = calendar.weekday(
+                first_date.year, first_date.month, first_date.day)
+            if str(day_of_week_index) == self.day:
+                found_first_date = True
+                break
+            first_date = first_date + datetime.timedelta(days=1)
 
+        date = first_date
+        dates_in_month = []
+        while date.month == month:
+            dates_in_month.append(date)
+            date = date + datetime.timedelta(days=7*self.period)
+        return dates_in_month
+
+    def generate_lessons_for_month(self, month_index, year):
+        '''
+        Generate the scheduled lessons based on the student's time slot
+        for a given month in a year
+        '''
+        dates = self.get_lesson_dates_in_month(
+            month=month_index,
+            year=year
+        )
+        # Check that the month doens't already have scheduled lessons
+        if self.scheduledlesson_set.filter(date__in=dates).exists():
+            return
+        for date in dates:
+            ScheduledLesson.objects.create(
+                date=date,
+                start_time=self.start_time,
+                end_time=self.end_time,
+                student=self,
+                is_trial=False,
+            )
+        return
+
+    def get_billing_for_month(self, month_index, year):
+        if month_index == 1:
+            last_month = 12
+            last_year = year - 1
+        else:
+            last_month = month_index - 1
+            last_year = year
+        last_month_cancels = ScheduledLesson.objects.filter_by_month(
+            last_month, last_year
+        ).filter(cancelled_on__isnull=False)
+        current_lessons = ScheduledLesson.objects.filter_by_month(
+            month_index, year
+        )
+        lessons_to_bill = current_lessons.count() - last_month_cancels.count()
+        bill = lessons_to_bill * self.rate
+        return bill
+        
     def __unicode__(self):
-        return '%s from %s to %s' % (self.get_day_display(), self.start_time, self.end_time)
-
-class ScheduledLesson(models.Model):
-    """
-    Represents the actual weekly instance of a lesson.
-    Should be created programmatically via timeslot for each given week
-
-    Unpersisted versions are presented to the user and only given a pk when
-    a user schedules.
-
-    If is_trial, Timeslot availability should be changed to False.
-
-    Alternative is to always maintain timeslot available flag manually. Up
-    to us then to make it available if a trial lesson isn't converted to a full
-    time student
-    """
-    date = models.DateField()
-    timeslot = models.ForeignKey('Timeslot')
-    is_trial = models.BooleanField(default=True)
-
-    def __unicode__(self):
-        return '%s, %s' % (self.date, self.timeslot)
+        return '%s (%s %s - %s)' % (
+            self.full_name(), self.get_day_display()[:3],
+            self.start_time.strftime('%I:%M%p'), self.end_time.strftime('%I:%M%p')
+        )

@@ -1,0 +1,273 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block headtitle %}
+Testimonials | Sophia Hsiao Studio
+{% endblock %}
+{% block meta %}
+  <meta name="description" content="">
+{% endblock %}
+
+{% block headloaders %}
+<link rel="stylesheet" href="{% static 'sophia/plugins/sky-forms-pro/skyforms/css/sky-forms.css' %}">
+<link rel="stylesheet" href="{% static 'sophia/plugins/sky-forms-pro/skyforms/custom/custom-sky-forms.css' %}">
+<link rel="stylesheet" href="{% static 'sophia/css/pages/shortcode_timeline2.css' %}">
+<link rel="stylesheet" href="{% static 'sophia/fullcalendar-3.0.1/fullcalendar.css' %}">
+{% endblock %}
+
+{% block content %}
+<!--=== Breadcrumbs v3 ===-->
+<div class="breadcrumbs-v3 img-v5 text-center">
+  <div class="container">
+    <h1>Scheduled Lessons</h1>
+    <br>
+    <ul class="breadcrumb-v2 list-inline">
+      <li><a href="{% url 'home' %}"><i class="rounded-x fa fa-angle-right"></i>Home</a></li>
+      <li class="active"><i class="rounded-x fa fa-angle-right"></i>Scheduled Lessons</li>
+    </ul>
+  </div>
+</div>
+<!--=== End Breadcrumbs v3 ===-->
+
+<div class="container content">
+  <div class="row">
+    <div class="col-md-12" id='calendar'>
+    
+    </div>
+  </div>
+</div>
+
+<!-- update modal -->
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id='update-modal'>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+        <h4 id="update-modal-title" class="modal-title"></h4>
+      </div>
+      <div class="modal-body">
+        <div id='update-modal-content' class='alert alert-info'></div>
+        <button class="btn-u btn-success" id="complete-lesson">Complete Lesson</button>
+        <button class="btn btn-primary" id="reschedule-lesson">Reschedule Lesson</button>
+        <button class="btn btn-warning" id="cancel-lesson">Cancel Lesson</button>
+        <button class="btn btn-danger" id="delete-lesson">Delete Lesson</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- create new modal -->
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id='create-modal'>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+        <h4 id="create-modal-title" class="modal-title">Create new lesson</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12">
+            <form method="post" id="create-form" class="sky-form sky-changes-3">
+              {% csrf_token %}
+              <fieldset>
+                <div class="row">
+                  {{form.start_string}}
+                  {{form.end_string}}
+                  <section class="col col-9">
+                    <label class="label">Student</label>
+                    <label class="select">
+                      {{form.student}}
+                    </label>
+                  </section>
+                </div>
+                <div class="modal-footer">
+                  <section class="pull-right">
+                    <div class="ladda-btn">
+                      <button type="button" class="btn-u btn-u-default ladda-button" data-dismiss="modal">Cancel</button>
+                      <button id="create-button" type="submit" class="btn-u btn-u-primary ladda-button" data-style="zoom-out">Submit</button>
+                    </div>
+                  </section>
+                </div>
+              </fieldset>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block endloaders %}
+<script src="{% static 'sophia/fullcalendar-3.0.1/moment.js' %}"></script>
+<script src="{% static 'sophia/fullcalendar-3.0.1/fullcalendar.min.js' %}"></script>
+<script src="{% static 'sophia/js/js.cookie.js' %}"></script>
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+      App.init();
+      var csrftoken = Cookies.get('csrftoken');
+
+      function csrfSafeMethod(method) {
+          // these HTTP methods do not require CSRF protection
+          return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+      }
+      $.ajaxSetup({
+          beforeSend: function(xhr, settings) {
+              if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                  xhr.setRequestHeader("X-CSRFToken", csrftoken);
+              }
+          }
+      });
+      var url = "{% url 'scheduled_lessons_api'%}"
+      $('#complete-lesson').click(function(){
+        var lesson_pk = $(this).data('lesson-pk');
+        $.post(url, {
+            'action': 'complete',
+            'pk': lesson_pk,
+        },
+        function(){
+          $('#calendar').fullCalendar('refetchEvents');
+          $('#update-modal').modal('toggle');
+        })
+      });
+
+      $('#reschedule-lesson').click(function(){
+        var lesson_pk = $(this).data('lesson-pk');
+        $.post(url, {
+            'action': 'reschedule',
+            'pk': lesson_pk
+        },
+        function(){
+          $('#calendar').fullCalendar('refetchEvents');
+          $('#update-modal').modal('toggle');
+        })
+      });
+
+      $('#cancel-lesson').click(function(){
+        var lesson_pk = $(this).data('lesson-pk');
+        $.post(url, {
+            'action': 'cancel',
+            'pk': lesson_pk
+        },
+        function(){
+          $('#calendar').fullCalendar('refetchEvents');
+          $('#update-modal').modal('toggle');
+        })
+      });
+
+      $('#delete-lesson').click(function(){
+        var lesson_pk = $(this).data('lesson-pk');
+        $.post(url, {
+            'action': 'delete',
+            'pk': lesson_pk
+        },
+        function(){
+          $('#calendar').fullCalendar('refetchEvents');
+          $('#update-modal').modal('toggle');
+        })
+      });
+
+      $('#create-form').submit(function(e){
+        e.preventDefault();
+        var data = $(this).serialize();
+        data = data + '&action=create' 
+        $.post(url, data,
+          function(){
+            $('#calendar').fullCalendar('refetchEvents');
+            $('#create-modal').modal('toggle');
+          }
+        );
+
+      })
+
+      $('#calendar').fullCalendar({
+        header: {
+          left: 'prev,next generateLessons',
+          center: 'title',
+          right: 'month,agendaWeek,agendaDay'
+        },
+        allDaySlot: false,
+        defaultView: 'agendaWeek',
+        selectable: true,
+        navLinks: true,
+        events: url,
+        slotDuration: '00:05:00',
+        editable: true,
+        minTime: '10:00:00',
+        maxTime: '21:00:00',
+        customButtons: {
+            generateLessons: {
+                text: 'Create Lessons',
+                click: function() {
+                    var view = $('#calendar').fullCalendar('getView');
+                    $.post(url, {
+                      'action': 'generate',
+                      'start_string': view.start.toISOString(),
+                      'end_string': view.end.toISOString()
+                    },
+                    function(){
+                      $('#calendar').fullCalendar('refetchEvents');
+                    })
+                }
+            }
+        },
+        select: function(start, end) {
+          $('#id_start_string').val(start.toISOString());
+          $('#id_end_string').val(end.toISOString());
+          $('#create-modal-title').html(
+            'Create new lesson from ' + start.format("hh:mm a") + ' to ' + end.format("hh:mm a")
+          );
+          $('#create-modal').modal('toggle');
+        },
+        eventClick: function(event, element) {
+          if (event.pk){
+              // Display the update modal
+              $('#update-modal-title').html(
+                event.title + ' - ' + event.day + ', ' + event.date
+              );
+              var update_modal_message;
+              if (!event.is_reschedule){
+                $('#delete-lesson').prop('disabled', true);
+                update_modal_message = 'This is the <b>original lesson time</b> for the student!';
+              } else {
+                $('#delete-lesson').prop('disabled', false);
+                update_modal_message = 'This is a <b>make up lesson</b> for the student!';
+              };
+              $('#update-modal-content').html(update_modal_message);
+
+              if (event.pending) {
+                $('#complete-lesson').data('lesson-pk', event.pk);
+                $('#cancel-lesson').data('lesson-pk', event.pk);
+                $('#reschedule-lesson').data('lesson-pk', event.pk);
+                $('#delete-lesson').data('lesson-pk', event.pk);
+                $('#update-modal').modal('toggle');
+              };
+          }
+          // $('#calendar').fullCalendar('refetchEvents');
+        },
+        eventDrop: function(event, delta){
+          $.post(url, {
+            'action': 'update_times',
+            'pk': event.pk,
+            'start_string': event.start.toISOString(),
+            'end_string': event.end.toISOString()
+          },
+          function(){
+            $('#calendar').fullCalendar('refetchEvents');
+          })
+        },
+        eventResize: function(event, delta){
+          $.post(url, {
+            'action': 'update_times',
+            'pk': event.pk,
+            'start_string': event.start.toISOString(),
+            'end_string': event.end.toISOString()
+          },
+          function(){
+            $('#calendar').fullCalendar('refetchEvents');
+          })
+        }
+      });
+
+    })
+</script>
+{% endblock %}

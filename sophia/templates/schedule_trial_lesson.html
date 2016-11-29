@@ -79,18 +79,18 @@ Schedule Trial Violin Lesson | Sophia Hsiao Studio
 
       <div id="grid-container" class="cbp-l-grid-agency">
         {% for trial_lesson in trial_lessons %}
-          <div class="cbp-item {{trial_lesson.timeslot.get_day_display}}">
+          <div class="cbp-item {{trial_lesson.student.get_day_display}}">
             <div class="cbp-caption">
               <div class="cbp-caption-defaultWrap">
                     <div class="pricing-table-v6">
                       <div class="service-block service-block-{{trial_lesson.color_class}}">
                         <i class="icon-custom icon-color-light rounded-x fa fa-calendar"></i>
-                        <h2 class="heading-md">{{trial_lesson.timeslot.get_day_display}}s</h2>
-                        <h2 class="heading-md">{{trial_lesson.timeslot.start_time}} to {{trial_lesson.timeslot.end_time}}</h2>
+                        <h2 class="heading-md">{{trial_lesson.student.get_day_display}}s</h2>
+                        <h2 class="heading-md">{{trial_lesson.student.start_time}} to {{trial_lesson.student.end_time}}</h2>
                         <hr>
                         <p>Select a date below:</p>
                         {% for date in trial_lesson.lesson_dates %}
-                          <a class="btn-brd btn-u select-date" style="display:block;" data-toggle="modal" data-target="#responsive" data-date="{{date}}" data-time-slot-pk="{{trial_lesson.timeslot.pk }}" data-time-slot-day="{{trial_lesson.timeslot.get_day_display}}" data-time-slot-start="{{trial_lesson.timeslot.start_time}}" data-time-slot-end="{{trial_lesson.timeslot.end_time}}">{{date}}</a><br>
+                          <a class="btn-brd btn-u select-date" style="display:block;" data-toggle="modal" data-target="#responsive" data-date="{{date}}" data-time-slot-pk="{{trial_lesson.student.pk }}" data-time-slot-day="{{trial_lesson.student.get_day_display}}" data-time-slot-start="{{trial_lesson.student.start_time}}" data-time-slot-end="{{trial_lesson.student.end_time}}">{{date}}</a><br>
                         {% endfor %}
                       </div>
                     </div>
@@ -138,7 +138,7 @@ Schedule Trial Violin Lesson | Sophia Hsiao Studio
               <fieldset>
                 <div class="row">
                   {{form.date}}
-                  {{form.timeslot_pk}}
+                  {{form.student_pk}}
                   {{form.start_time}}
                   {{form.end_time}}
                   {{form.day}}
@@ -277,14 +277,14 @@ Schedule Trial Violin Lesson | Sophia Hsiao Studio
       }
 
       $('.select-date').click(function(){
-        var timeslot_pk = $(this).data('time-slot-pk');
+        var student_pk = $(this).data('time-slot-pk');
         var date = $(this).data('date');
         var start_time = $(this).data('time-slot-start');
         var end_time = $(this).data('time-slot-end');
         var day = $(this).data('time-slot-day');
 
         $('#id_date').val(date);
-        $('#id_timeslot_pk').val(timeslot_pk);
+        $('#id_student_pk').val(student_pk);
         $('#id_start_time').val(start_time);
         $('#id_end_time').val(end_time);
         $('#id_day').val(day);
