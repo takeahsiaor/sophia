@@ -187,6 +187,25 @@ class TestScheduledLessonsAPI(TestCase):
         lesson.refresh_from_db()
         self.assertTrue(lesson.rescheduled_on)
 
+    def test_clear(self):
+        lesson = self.create_lesson()
+        now = datetime.datetime.now()
+        lesson.rescheduled_on = now
+        lesson.cancelled_on = now
+        lesson.completed_on = now
+        lesson.save()
+        response = self.client.post(
+            self.url,
+            {
+                'action': 'clear',
+                'pk': lesson.pk
+            }
+        )
+        lesson.refresh_from_db()
+        self.assertFalse(lesson.rescheduled_on)
+        self.assertFalse(lesson.cancelled_on)
+        self.assertFalse(lesson.completed_on)
+
     def test_update_times(self):
         lesson = self.create_lesson()
         date = lesson.date

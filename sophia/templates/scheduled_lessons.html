@@ -49,7 +49,9 @@ Calendar | Sophia Hsiao Studio
         <button class="btn-u btn-success" id="complete-lesson">Complete Lesson</button>
         <button class="btn btn-warning" id="reschedule-lesson">Reschedule Lesson</button>
         <button class="btn btn-u-default" id="cancel-lesson">Cancel Lesson</button>
-        <button class="btn btn-danger" id="delete-lesson">Delete Lesson</button>
+        <hr>
+        <button class="btn btn-default" id="clear-lesson">Clear</button>
+        <button class="btn btn-danger pull-right" id="delete-lesson">Delete Lesson</button>
       </div>
     </div>
   </div>
@@ -154,6 +156,18 @@ Calendar | Sophia Hsiao Studio
         })
       });
 
+      $('#clear-lesson').click(function(){
+        var lesson_pk = $(this).data('lesson-pk');
+        $.post(url, {
+            'action': 'clear',
+            'pk': lesson_pk
+        },
+        function(){
+          $('#calendar').fullCalendar('refetchEvents');
+          $('#update-modal').modal('toggle');
+        })
+      });
+
       $('#delete-lesson').click(function(){
         var lesson_pk = $(this).data('lesson-pk');
         $.post(url, {
@@ -237,6 +251,7 @@ Calendar | Sophia Hsiao Studio
 
               $('#complete-lesson').data('lesson-pk', event.pk);
               $('#cancel-lesson').data('lesson-pk', event.pk);
+              $('#clear-lesson').data('lesson-pk', event.pk);
               $('#reschedule-lesson').data('lesson-pk', event.pk);
               $('#delete-lesson').data('lesson-pk', event.pk);
               $('#update-modal').modal('toggle');

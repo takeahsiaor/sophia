@@ -81,6 +81,7 @@ class ScheduledLessonsAPI(View):
     CANCEL = 'cancel'
     COMPLETE = 'complete'
     RESCHEDULE = 'reschedule'
+    CLEAR = 'clear'
     CREATE = 'create'
     UPDATE_TIMES = 'update_times'
     DELETE = 'delete'
@@ -162,6 +163,11 @@ class ScheduledLessonsAPI(View):
                 lesson.save()
             elif action == self.RESCHEDULE:
                 lesson.rescheduled_on = datetime.datetime.now()
+                lesson.completed_on = None
+                lesson.cancelled_on = None
+                lesson.save()
+            elif action ==self.CLEAR:
+                lesson.rescheduled_on = None
                 lesson.completed_on = None
                 lesson.cancelled_on = None
                 lesson.save()
