@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block headtitle %}
-Testimonials | Sophia Hsiao Studio
+Calendar | Sophia Hsiao Studio
 {% endblock %}
 {% block meta %}
   <meta name="description" content="">
@@ -47,8 +47,8 @@ Testimonials | Sophia Hsiao Studio
       <div class="modal-body">
         <div id='update-modal-content' class='alert alert-info'></div>
         <button class="btn-u btn-success" id="complete-lesson">Complete Lesson</button>
-        <button class="btn btn-primary" id="reschedule-lesson">Reschedule Lesson</button>
-        <button class="btn btn-warning" id="cancel-lesson">Cancel Lesson</button>
+        <button class="btn btn-warning" id="reschedule-lesson">Reschedule Lesson</button>
+        <button class="btn btn-u-default" id="cancel-lesson">Cancel Lesson</button>
         <button class="btn btn-danger" id="delete-lesson">Delete Lesson</button>
       </div>
     </div>
@@ -234,13 +234,13 @@ Testimonials | Sophia Hsiao Studio
               };
               $('#update-modal-content').html(update_modal_message);
 
-              if (event.pending) {
-                $('#complete-lesson').data('lesson-pk', event.pk);
-                $('#cancel-lesson').data('lesson-pk', event.pk);
-                $('#reschedule-lesson').data('lesson-pk', event.pk);
-                $('#delete-lesson').data('lesson-pk', event.pk);
-                $('#update-modal').modal('toggle');
-              };
+
+              $('#complete-lesson').data('lesson-pk', event.pk);
+              $('#cancel-lesson').data('lesson-pk', event.pk);
+              $('#reschedule-lesson').data('lesson-pk', event.pk);
+              $('#delete-lesson').data('lesson-pk', event.pk);
+              $('#update-modal').modal('toggle');
+
           }
           // $('#calendar').fullCalendar('refetchEvents');
         },

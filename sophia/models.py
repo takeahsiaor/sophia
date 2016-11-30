@@ -142,11 +142,11 @@ class ScheduledLessonQuerySet(models.QuerySet):
                 # green
                 color = '#87b667'
             elif lesson.is_cancelled:
-                # red
-                color = '#cf6a6a'
-            elif lesson.is_rescheduled:
                 # gray
                 color = '#b0b0b0'
+            elif lesson.is_rescheduled:
+                # orange
+                color = '#eea236'
             lesson_data = {
                 'start': lesson.get_start_time_string(),
                 'end': lesson.get_end_time_string(),

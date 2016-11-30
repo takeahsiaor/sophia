@@ -152,12 +152,18 @@ class ScheduledLessonsAPI(View):
             lesson = get_object_or_404(ScheduledLesson, pk=lesson_pk)
             if action == self.COMPLETE:
                 lesson.completed_on = datetime.datetime.now()
+                lesson.cancelled_on = None
+                lesson.rescheduled_on = None
                 lesson.save()
             elif action == self.CANCEL:
                 lesson.cancelled_on = datetime.datetime.now()
+                lesson.completed_on = None
+                lesson.rescheduled_on = None
                 lesson.save()
             elif action == self.RESCHEDULE:
                 lesson.rescheduled_on = datetime.datetime.now()
+                lesson.completed_on = None
+                lesson.cancelled_on = None
                 lesson.save()
             elif action == self.UPDATE_TIMES:
                 start_string = request.POST.get('start_string')
