@@ -52,8 +52,11 @@ class StudentAdmin(admin.ModelAdmin):
     model = Student
     form = StudentForm
     list_display = (
-        'first_name', 'last_name', 'rate', 'active', 'day',
-        'start_time', 'end_time')
+        'first_name', 'last_name', 'rate', 'day',
+        'start_time', 'end_time', 'active', 'is_trial', 'is_held')
+    list_filter = (
+        'is_trial', 'is_held', 'day'
+        )
 
 admin.site.register(Student, StudentAdmin)
 admin.site.register(Testimonial, TestimonialAdmin)
