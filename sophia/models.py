@@ -339,7 +339,12 @@ class Student(models.Model):
         )
         lessons_to_bill = current_lessons.count() - last_month_cancels.count()
         bill = lessons_to_bill * self.rate
-        return bill
+        billing = {
+            'cancelled_lessons': last_month_cancels,
+            'scheduled_lessons': current_lessons,
+            'bill': bill
+        }
+        return billing
         
     def __unicode__(self):
         return '%s (%s %s - %s)' % (

@@ -212,6 +212,8 @@ class ScheduleTrialLessonView(FormView):
         ScheduledLesson.objects.create(
             date=form.cleaned_data['date'],
             student=student,
+            start_time=student.start_time,
+            end_time=student.end_time,
             is_trial=True,
             is_reschedule=False
         )
