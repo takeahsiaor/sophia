@@ -33,7 +33,6 @@ class SmartImageFieldFile(ImageFieldFile):
 
     is_wide = property(_is_wide)
     is_landscape = property(_is_landscape)
-    #this is where to put my method to calculate aspect ratio
 
 
 class SmartImageField(ImageField):
@@ -71,7 +70,6 @@ class BlogPost(models.Model):
     content = RichTextField()
 
     def clean(self):
-        #remove <p>&nbsp;</p> from manuscripts
         self.content = self.content.replace('<p>&nbsp;</p>', '')
         super(BlogPost, self).clean()
 
@@ -123,44 +121,6 @@ class ScheduledLessonQuerySet(models.QuerySet):
             lessons_dict[lesson.date].append(lesson)
         return lessons_dict
 
-    def as_json(self):
-        # might be easier just to use DRF serializers
-        data = []
-        for lesson in self:
-            student = lesson.student
-            if student:
-                student_name = student.full_name()
-            else:
-                student_name = 'Free Trial Lesson'
-
-            # Instead of this big conditional, make a get_state method
-            # on Scheduled Lesson and build a color mapping dict between
-            # state and color.
-            # blue
-            color = '#539ce7'
-            if lesson.is_completed:
-                # green
-                color = '#87b667'
-            elif lesson.is_cancelled:
-                # gray
-                color = '#b0b0b0'
-            elif lesson.is_rescheduled:
-                # orange
-                color = '#eea236'
-            lesson_data = {
-                'start': lesson.get_start_time_string(),
-                'end': lesson.get_end_time_string(),
-                'day': lesson.student.get_day_display(),
-                'title' : student_name,
-                'pk': lesson.pk,
-                'color': color,
-                'date': lesson.date.strftime('%B %d, %Y'),
-                'pending': lesson.is_pending,
-                'is_reschedule': lesson.is_reschedule
-            }
-            data.append(lesson_data)
-        return json.dumps(data)
-
 
 class ScheduledLessonManager(models.Manager):
     def get_queryset(self):
@@ -209,6 +169,24 @@ class ScheduledLesson(models.Model):
             not self.rescheduled_on and not self.cancelled_on and not self.completed_on
         )
 
+    @property
+    def color(self):
+        # Instead of this big conditional, make a get_state method
+        # on Scheduled Lesson and build a color mapping dict between
+        # state and color.
+        # blue
+        color = '#539ce7'
+        if self.is_completed:
+            # green
+            color = '#87b667'
+        elif self.is_cancelled:
+            # gray
+            color = '#b0b0b0'
+        elif self.is_rescheduled:
+            # orange
+            color = '#eea236'
+        return color
+
     def get_start_time_string(self):
         dt = datetime.datetime.combine(self.date, self.start_time)
         return dt.isoformat() 
@@ -255,7 +233,7 @@ class Student(models.Model):
         dates = self.get_lesson_dates()
         return date in dates
 
-    def get_lesson_dates(self, weeks=2):
+    def get_lesson_dates(self, weeks=2, as_str=True):
         '''
         Used to get the lesson dates from day of week
         '''
@@ -275,7 +253,9 @@ class Student(models.Model):
         dates = []
         for i in range(weeks):
             date = first_date + datetime.timedelta(days=7*i)
-            dates.append(date.strftime('%B %d, %Y'))
+            if as_str:
+                date = date.strftime('%B %d, %Y')
+            dates.append(date)
         return dates
 
     def get_lesson_dates_in_month(self, month, year):

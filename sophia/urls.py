@@ -9,6 +9,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.sitemaps.views import sitemap
 from django.views.generic import TemplateView
 
+from rest_framework.routers import DefaultRouter
+
 from .sitemap import StaticViewSitemap, BlogSitemap
 
 sitemaps = {
@@ -16,12 +18,16 @@ sitemaps = {
     'blog': BlogSitemap
 }
 
+router = DefaultRouter()
+router.register(r'scheduled_lessons', views.ScheduledLessonViewSet)
+
 urlpatterns = [
     url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps}),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^ckeditor/', include(ckeditor_urls)),
     url(r'^captcha/', include(captcha_urls)),
     url(r'^$', views.HomeView.as_view(), name='home'),
+    url(r'^api/', include(router.urls)),
     url(r'^bio/$', views.BioView.as_view(), name='bio'),
     url(r'^policy/$', views.PolicyView.as_view(), name='policy'),
     url(r'^philosophy/$', views.PhilosophyView.as_view(), name='philosophy'),
@@ -32,10 +38,6 @@ urlpatterns = [
     url(r'^scheduled-lessons/$',
         login_required(views.ScheduledLessonsView.as_view()),
         name='scheduled_lessons'
-    ),
-    url(r'^update-scheduled-lesson/$',
-        login_required(views.ScheduledLessonsAPI.as_view()),
-        name='scheduled_lessons_api'
     ),
     url(r'^blog/$', views.BlogHome.as_view(), name='blog'),
     url(r'^blog/entry/(?P<post_id>\d+)/$', views.BlogEntry.as_view(), name='blog_entry'),

@@ -106,72 +106,95 @@ Calendar | Sophia Hsiao Studio
               }
           }
       });
-      var url = "{% url 'scheduled_lessons_api'%}"
       $('#complete-lesson').click(function(){
         var lesson_pk = $(this).data('lesson-pk');
-        $.post(url, {
-            'action': 'complete',
-            'pk': lesson_pk,
-        },
-        function(){
-          $('#calendar').fullCalendar('refetchEvents');
-          $('#update-modal').modal('toggle');
+        d = new Date();
+        $.ajax({
+          url: "/api/scheduled_lessons/" + lesson_pk + '/',
+          type: 'PATCH',
+          data: {
+            'completed_on': d.toISOString(),
+            'rescheduled_on': null,
+            'cancelled_on': null
+          },
+          success: function(){
+            $('#calendar').fullCalendar('refetchEvents');
+            $('#update-modal').modal('toggle');
+          }
         })
+
       });
 
       $('#reschedule-lesson').click(function(){
         var lesson_pk = $(this).data('lesson-pk');
-        $.post(url, {
-            'action': 'reschedule',
-            'pk': lesson_pk
-        },
-        function(){
-          $('#calendar').fullCalendar('refetchEvents');
-          $('#update-modal').modal('toggle');
+        d = new Date();
+        $.ajax({
+          url: "/api/scheduled_lessons/" + lesson_pk + '/',
+          type: 'PATCH',
+          data: {
+            'rescheduled_on': d.toISOString(),
+            'completed_on': null,
+            'cancelled_on': null
+          },
+          success: function(){
+            $('#calendar').fullCalendar('refetchEvents');
+            $('#update-modal').modal('toggle');
+          }
         })
       });
 
       $('#cancel-lesson').click(function(){
         var lesson_pk = $(this).data('lesson-pk');
-        $.post(url, {
-            'action': 'cancel',
-            'pk': lesson_pk
-        },
-        function(){
-          $('#calendar').fullCalendar('refetchEvents');
-          $('#update-modal').modal('toggle');
+        d = new Date();
+        $.ajax({
+          url: "/api/scheduled_lessons/" + lesson_pk + '/',
+          type: 'PATCH',
+          data: {
+            'cancelled_on': d.toISOString(),
+            'completed_on': null,
+            'rescheduled_on': null
+          },
+          success: function(){
+            $('#calendar').fullCalendar('refetchEvents');
+            $('#update-modal').modal('toggle');
+          }
         })
       });
 
       $('#clear-lesson').click(function(){
         var lesson_pk = $(this).data('lesson-pk');
-        $.post(url, {
-            'action': 'clear',
-            'pk': lesson_pk
-        },
-        function(){
-          $('#calendar').fullCalendar('refetchEvents');
-          $('#update-modal').modal('toggle');
+
+        $.ajax({
+          url: "/api/scheduled_lessons/" + lesson_pk + '/',
+          type: 'PATCH',
+          data: {
+            'cancelled_on': null,
+            'completed_on': null,
+            'rescheduled_on': null
+          },
+          success: function(){
+            $('#calendar').fullCalendar('refetchEvents');
+            $('#update-modal').modal('toggle');
+          }
         })
       });
 
       $('#delete-lesson').click(function(){
         var lesson_pk = $(this).data('lesson-pk');
-        $.post(url, {
-            'action': 'delete',
-            'pk': lesson_pk
-        },
-        function(){
-          $('#calendar').fullCalendar('refetchEvents');
-          $('#update-modal').modal('toggle');
+        $.ajax({
+          url: "/api/scheduled_lessons/" + lesson_pk + '/',
+          type: 'DELETE',
+          success: function(){
+            $('#calendar').fullCalendar('refetchEvents');
+            $('#update-modal').modal('toggle');
+          }
         })
       });
 
       $('#create-form').submit(function(e){
         e.preventDefault();
         var data = $(this).serialize();
-        data = data + '&action=create' 
-        $.post(url, data,
+        $.post("/api/scheduled_lessons/", data,
           function(){
             $('#calendar').fullCalendar('refetchEvents');
             $('#create-modal').modal('toggle');
@@ -190,7 +213,7 @@ Calendar | Sophia Hsiao Studio
         defaultView: 'agendaWeek',
         selectable: true,
         navLinks: true,
-        events: url,
+        events: "{% url 'scheduledlesson-list'%}",
         slotDuration: '00:05:00',
         editable: true,
         minTime: '10:00:00',
@@ -200,7 +223,7 @@ Calendar | Sophia Hsiao Studio
                 text: 'Create Lessons',
                 click: function() {
                     var view = $('#calendar').fullCalendar('getView');
-                    $.post(url, {
+                    $.post('/api/scheduled_lessons/bulk_generate/', {
                       'action': 'generate',
                       'start_string': view.start.toISOString(),
                       'end_string': view.end.toISOString()
@@ -247,25 +270,29 @@ Calendar | Sophia Hsiao Studio
           // $('#calendar').fullCalendar('refetchEvents');
         },
         eventDrop: function(event, delta){
-          $.post(url, {
-            'action': 'update_times',
-            'pk': event.pk,
-            'start_string': event.start.toISOString(),
-            'end_string': event.end.toISOString()
-          },
-          function(){
-            $('#calendar').fullCalendar('refetchEvents');
+          $.ajax({
+            url: "/api/scheduled_lessons/" + event.pk + '/',
+            type: 'PATCH',
+            data: {
+              'start_string': event.start.toISOString(),
+              'end_string': event.end.toISOString(),
+            },
+            success: function(){
+              $('#calendar').fullCalendar('refetchEvents');
+            }
           })
         },
         eventResize: function(event, delta){
-          $.post(url, {
-            'action': 'update_times',
-            'pk': event.pk,
-            'start_string': event.start.toISOString(),
-            'end_string': event.end.toISOString()
-          },
-          function(){
-            $('#calendar').fullCalendar('refetchEvents');
+          $.ajax({
+            url: "/api/scheduled_lessons/" + event.pk + '/',
+            type: 'PATCH',
+            data: {
+              'start_string': event.start.toISOString(),
+              'end_string': event.end.toISOString(),
+            },
+            success: function(){
+              $('#calendar').fullCalendar('refetchEvents');
+            }
           })
         }
       });

@@ -1,14 +1,18 @@
 import datetime
 import dateutil.parser
 
+from django.contrib import messages
+from django.core.urlresolvers import reverse_lazy, reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Q
 from django.views.generic import TemplateView, FormView, ListView, View
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from django.contrib import messages
-from django.core.urlresolvers import reverse_lazy, reverse
+from rest_framework import permissions, status, viewsets
+from rest_framework.decorators import list_route
+from rest_framework.response import Response
+
 from sophia.forms import ContactForm, ScheduleTrialLessonForm, ScheduleLessonForm
 from sophia.models import (
     ScheduledLesson,
@@ -17,6 +21,144 @@ from sophia.models import (
     BlogPost,
     BlogTag,
 )
+from sophia.serializers import ScheduledLessonSerializer
+
+
+class ScheduledLessonViewSet(viewsets.ModelViewSet):
+    queryset = ScheduledLesson.objects.all()
+    serializer_class = ScheduledLessonSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+    def get_queryset(self):
+        start_str = self.request.GET.get('start')
+        end_str = self.request.GET.get('end')
+        if start_str and end_str:
+            start = datetime.datetime.strptime(start_str, '%Y-%m-%d')
+            end = datetime.datetime.strptime(end_str, '%Y-%m-%d')
+            return ScheduledLesson.objects.filter(
+                date__gte=start
+            ).filter(
+                date__lte=end
+            )
+        return self.queryset
+
+    def destroy(self, request, pk=None, **kwargs):
+        '''
+        Prevent deletion of non-reschedule lessons
+        '''
+        try:
+            lesson = ScheduledLesson.objects.get(pk=pk)
+        except ScheduledLesson.DoesNotExist:
+            return Response(
+                'Lesson matching PK does not exist',
+                status=status.HTTP_404_NOT_FOUND
+            )
+        if lesson.is_reschedule:
+            return super(ScheduledLessonViewSet, self).destroy(request, pk, kwargs)
+        return Response(
+            'Deleting non-reschedule lessons is not allowed',
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    def update(self, request, pk=None, **kwargs):
+        # Need to override this because of how the JS calendar library
+        # gives time.
+        try:
+            lesson = ScheduledLesson.objects.get(pk=pk)
+        except ScheduledLesson.DoesNotExist:
+            return Response(
+                'Lesson matching PK does not exist',
+                status=status.HTTP_404_NOT_FOUND
+            )
+        start_string = request.data.get('start_string')
+        end_string = request.data.get('end_string')
+        completed_on = request.data.get('completed_on')
+        cancelled_on = request.data.get('cancelled_on')
+        rescheduled_on = request.data.get('rescheduled_on')
+
+        if start_string and end_string:
+            start_datetime = dateutil.parser.parse(start_string)
+            end_datetime = dateutil.parser.parse(end_string)
+            lesson.date = start_datetime.date()
+            lesson.start_time = start_datetime.time()
+            lesson.end_time = end_datetime.time()
+
+        flags = ('completed_on', 'cancelled_on', 'rescheduled_on')
+        for flag in flags:
+            if flag in request.data:
+                time_str = request.data.get(flag)
+                if time_str:
+                    # This means that we were passed an actual time string
+                    parsed_datetime = dateutil.parser.parse(time_str)
+                    setattr(lesson, flag, parsed_datetime)
+                else:
+                    # This means we were explicitly passed None for the time
+                    # so we should clear it out
+                    setattr(lesson, flag, None)
+
+        lesson.save()
+        return Response(status=status.HTTP_202_ACCEPTED)
+
+    def create(self, request):
+        # Need to override this because of how the JS calendar library
+        # gives time.
+        start_string = request.POST.get('start_string')
+        end_string = request.POST.get('end_string')
+        student_pk = request.POST.get('student')
+        start_datetime = dateutil.parser.parse(start_string)
+        end_datetime = dateutil.parser.parse(end_string)
+
+        date = start_datetime.date()
+        start_time = start_datetime.time()
+        end_time = end_datetime.time()
+        day = start_datetime.weekday()
+        try:
+            student = Student.objects.get(pk=student_pk)
+        except Student.DoesNotExist:
+            return Response(
+                'Student matching PK does not exist',
+                status=status.HTTP_404_NOT_FOUND
+            )
+        lesson = ScheduledLesson.objects.create(
+            date=date,
+            start_time=start_time,
+            end_time=end_time,
+            student=student,
+            is_trial=False,
+            is_reschedule=True
+        )
+        return Response(status=status.HTTP_201_CREATED)
+
+
+    @list_route(methods=['post'])
+    def bulk_generate(self, request):
+        '''
+        This will generate lessons for scheduled students for every
+        month represented in the calendar view from which this
+        method was invoked
+        In a monthly view, it's possible to see the end of month 1, the
+        entirety of month 2, and the beginning of month 3. This should
+        create the lessons for all three months
+        '''
+        start_string = request.POST.get('start_string')
+        end_string = request.POST.get('end_string')
+        start_datetime = dateutil.parser.parse(start_string)
+        end_datetime = dateutil.parser.parse(end_string)
+
+        first_of_months = set()
+        date = start_datetime
+        # Get all the datetimes representing the first of month between
+        # the start and end datetime.
+        while date <= end_datetime:
+            first_of_month = datetime.date(day=1, month=date.month, year=date.year)
+            first_of_months.add(first_of_month)
+            date = date + datetime.timedelta(weeks=1)
+        students = Student.objects.filter(active=True, is_trial=False)
+        for student in students:
+            for date in first_of_months:
+                student.generate_lessons_for_month(date.month, date.year)
+        return Response(status=status.HTTP_201_CREATED) 
+
 
 def paginate(request, queryset, num_per_page):
     paginator = Paginator(queryset, num_per_page)
@@ -72,122 +214,6 @@ class ScheduledLessonsView(TemplateView):
         lessons_qs = ScheduledLesson.objects.filter(date__gte=start)
         context['form'] = ScheduleLessonForm()
         return context
-
-
-class ScheduledLessonsAPI(View):
-    '''
-    View for interacting and updating the scheduled lessons
-    '''
-    CANCEL = 'cancel'
-    COMPLETE = 'complete'
-    RESCHEDULE = 'reschedule'
-    CLEAR = 'clear'
-    CREATE = 'create'
-    UPDATE_TIMES = 'update_times'
-    DELETE = 'delete'
-    GENERATE = 'generate'
-
-    def get(self, request):
-        start_str = request.GET.get('start')
-        end_str = request.GET.get('end')
-        start = datetime.datetime.strptime(start_str, '%Y-%m-%d')
-        end = datetime.datetime.strptime(end_str, '%Y-%m-%d')
-        lessons = ScheduledLesson.objects.filter(
-            date__gte=start
-        ).filter(
-            date__lte=end
-        )
-        return HttpResponse(
-            lessons.as_json()
-        )
-
-    def post(self, request):
-        action = self.request.POST.get('action')
-        if action == self.CREATE:
-            start_string = request.POST.get('start_string')
-            end_string = request.POST.get('end_string')
-            student_pk = request.POST.get('student')
-            start_datetime = dateutil.parser.parse(start_string)
-            end_datetime = dateutil.parser.parse(end_string)
-
-            date = start_datetime.date()
-            start_time = start_datetime.time()
-            end_time = end_datetime.time()
-            day = start_datetime.weekday()
-
-            student = get_object_or_404(Student, pk=student_pk)
-            lesson = ScheduledLesson.objects.create(
-                date=date,
-                start_time=start_time,
-                end_time=end_time,
-                student=student,
-                is_trial=False,
-                is_reschedule=True
-            )
-            return HttpResponse()
-        elif action == self.GENERATE:
-            start_string = request.POST.get('start_string')
-            start_datetime = dateutil.parser.parse(start_string)
-            end_string = request.POST.get('end_string')
-            end_datetime = dateutil.parser.parse(end_string)
-
-            first_of_months = set()
-            date = start_datetime
-            # Get all the datetimes representing the first of month between
-            # the start and end datetime.
-            while date < end_datetime:
-                first_of_month = datetime.date(day=1, month=date.month, year=date.year)
-                first_of_months.add(first_of_month)
-                date = date + datetime.timedelta(weeks=1)
-            final_first_of_month = datetime.date(
-                day=1, month=end_datetime.month, year=end_datetime.year
-            )
-            first_of_months.add(final_first_of_month)
-            students = Student.objects.filter(active=True, is_trial=False)
-            for student in students:
-                for date in first_of_months:
-                    student.generate_lessons_for_month(date.month, date.year)
-            return HttpResponse()
-        else:
-            lesson_pk = request.POST.get('pk')
-            lesson = get_object_or_404(ScheduledLesson, pk=lesson_pk)
-            if action == self.COMPLETE:
-                lesson.completed_on = datetime.datetime.now()
-                lesson.cancelled_on = None
-                lesson.rescheduled_on = None
-                lesson.save()
-            elif action == self.CANCEL:
-                lesson.cancelled_on = datetime.datetime.now()
-                lesson.completed_on = None
-                lesson.rescheduled_on = None
-                lesson.save()
-            elif action == self.RESCHEDULE:
-                lesson.rescheduled_on = datetime.datetime.now()
-                lesson.completed_on = None
-                lesson.cancelled_on = None
-                lesson.save()
-            elif action ==self.CLEAR:
-                lesson.rescheduled_on = None
-                lesson.completed_on = None
-                lesson.cancelled_on = None
-                lesson.save()
-            elif action == self.UPDATE_TIMES:
-                start_string = request.POST.get('start_string')
-                end_string = request.POST.get('end_string')
-                start_datetime = dateutil.parser.parse(start_string)
-                end_datetime = dateutil.parser.parse(end_string)
-                date = start_datetime.date()
-                lesson.date = date
-                lesson.start_time = start_datetime.time()
-                lesson.end_time = end_datetime.time()
-                lesson.save()
-            elif action == self.DELETE:
-                if lesson.is_reschedule:
-                    # Prevent the normal lesson times from getting deleted
-                    # Those should be rescheduled instead and you should only
-                    # be able to delete makeup lessons
-                    lesson.delete()
-            return HttpResponse()
 
 
 class ScheduleTrialLessonView(FormView):
@@ -320,8 +346,8 @@ def get_archive_post_list():
 
 
 class Blog(TemplateView):
-    #all blog pages subclass from this
-    #supplement get_context_data making sure to call super()
+    # all blog pages subclass from this
+    # supplement get_context_data making sure to call super()
     # override template_name
     def paginate_blog(self, posts_queryset, num_per_page=5):
         """

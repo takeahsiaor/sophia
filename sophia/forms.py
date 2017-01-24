@@ -84,7 +84,9 @@ class ScheduleTrialLessonForm(forms.Form):
         required=False,
         label="Check if you currently have a violin to use",
         widget=forms.CheckboxInput(attrs={}))
-    comments = forms.CharField(label='Additional Info',
+    comments = forms.CharField(
+        label='Additional Info',
+        required=False,
         widget=forms.Textarea(
             attrs={'class':'form-control',
             'placeholder': "Is there anything else you'd like us to know?"}
@@ -138,7 +140,7 @@ class ScheduleTrialLessonForm(forms.Form):
         )
         # student obj doesn't exist
         if not students:
-            raise form.ValidationError("Sorry! Someone else just snapped up"
+            raise forms.ValidationError("Sorry! Someone else just snapped up"
                 " that spot. Please pick a new one and try again")
 
         # ensure that the timeslot and date match up and weren't tampered with
