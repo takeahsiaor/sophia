@@ -171,10 +171,6 @@ class ScheduledLesson(models.Model):
 
     @property
     def color(self):
-        # Instead of this big conditional, make a get_state method
-        # on Scheduled Lesson and build a color mapping dict between
-        # state and color.
-        # blue
         color = '#539ce7'
         if self.is_completed:
             # green
