@@ -196,6 +196,8 @@ class ScheduledLesson(models.Model):
 
 
 class Student(models.Model):
+    # TODO: when updating a student's canonical time, make sure to delete
+    # all future pending ScheduledLessons that are created
     DAYS_OF_WEEK = (
         ('0', 'Monday'),
         ('1', 'Tuesday'),
@@ -275,6 +277,9 @@ class Student(models.Model):
         dates_in_month = []
         while date.month == month:
             dates_in_month.append(date)
+            # Bug here! if period is anything besides 1, this will give
+            # bad results. Putting 2 will cause issues in months after
+            # those with 5 weeks
             date = date + datetime.timedelta(days=7*self.period)
         return dates_in_month
 
