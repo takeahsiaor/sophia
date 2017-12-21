@@ -86,7 +86,7 @@ Schedule Trial Violin Lesson | Sophia Hsiao Studio
                       <div class="service-block service-block-{{trial_lesson.color_class}}">
                         <i class="icon-custom icon-color-light rounded-x fa fa-calendar"></i>
                         <h2 class="heading-md">{{trial_lesson.student.get_day_display}}s</h2>
-                        <h2 class="heading-md">{{trial_lesson.student.start_time}} to {{trial_lesson.student.end_time}}</h2>
+                        <h2 class="heading-md">{{trial_lesson.student.start_time|time:"g:i A"}} to {{trial_lesson.student.end_time|time:"g:i A"}</h2>
                         <hr>
                         <p>Select a date below:</p>
                         {% for date in trial_lesson.lesson_dates %}
