@@ -5,11 +5,26 @@ from django.db import models
 from sophia.models import (
     BlogPost,
     BlogTag,
+    GalleryImage,
+    GalleryImageTag,
     PageText,
     ScheduledLesson,
     Student,
     Testimonial,
 )
+
+
+class GalleryImageTagAdmin(admin.ModelAdmin):
+    model = GalleryImageTag
+
+    list_display = ('name',)
+
+
+class GalleryImageAdmin(admin.ModelAdmin):
+    model = GalleryImage
+
+    list_display = ('title', 'caption', 'ordering', 'priority', 'image')
+    ordering = ('ordering',)
 
 class TestimonialAdmin(admin.ModelAdmin):
     model = Testimonial
@@ -58,6 +73,8 @@ class StudentAdmin(admin.ModelAdmin):
         'is_trial', 'is_held', 'day'
         )
 
+admin.site.register(GalleryImage, GalleryImageAdmin)
+admin.site.register(GalleryImageTag, GalleryImageTagAdmin)
 admin.site.register(Student, StudentAdmin)
 admin.site.register(Testimonial, TestimonialAdmin)
 admin.site.register(PageText)

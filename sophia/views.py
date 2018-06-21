@@ -20,6 +20,8 @@ from sophia.models import (
     Testimonial,
     BlogPost,
     BlogTag,
+    GalleryImage,
+    GalleryImageTag
 )
 from sophia.serializers import ScheduledLessonSerializer
 
@@ -292,6 +294,11 @@ class TestimonialView(TemplateView):
 class GalleryView(TemplateView):
     template_name = 'gallery.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(GalleryView, self).get_context_data(**kwargs)
+        context['gallery_items'] = GalleryImage.objects.all().order_by('ordering')
+        context['image_tags'] = GalleryImageTag.objects.all()
+        return context
 
 def get_archive_post_list():
     all_posts = BlogPost.objects.all().order_by('-created_on')

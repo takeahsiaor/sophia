@@ -148,3 +148,11 @@
   	transition: all .2s ease-in-out;    
 
 }
+
+.cbp-l-caption-desc {
+	color: #dcdcdc;
+}
+
+.cbp-popup-lightbox-title{
+	font: 400 15px/18px "Open Sans", sans-serif
+}

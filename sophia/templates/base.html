@@ -93,11 +93,6 @@
                         <li>
                             <a href="{% url 'blog' %}">Blog</a>
                         </li>
-                        {% if user.is_authenticated %}
-                        <li>
-                            <a href="{% url 'scheduled_lessons' %}">Calendar</a>
-                        </li>
-                        {% endif %}
                         <li>
                             <a href="{% url 'contact' %}">Contact</a>
                         </li>

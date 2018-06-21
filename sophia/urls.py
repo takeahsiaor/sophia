@@ -43,6 +43,7 @@ urlpatterns = [
     url(r'^blog/entry/(?P<post_id>\d+)/$', views.BlogEntry.as_view(), name='blog_entry'),
     url(r'^blog/tag/(?P<tag_id>\d+)/$', views.BlogByTag.as_view(), name='blog_by_tag'),
     url(r'^blog/search/$', views.BlogSearch.as_view(), name='search_blog'),
+    url(r'^gallery/$', views.GalleryView.as_view(), name='gallery'),
 ]
 
 if settings.DEBUG:

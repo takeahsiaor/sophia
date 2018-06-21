@@ -44,6 +44,30 @@ class SmartImageField(ImageField):
     attr_class = SmartImageFieldFile
 
 
+class GalleryImageTag(models.Model):
+    name = models.CharField(max_length=40)
+
+    def save(self):
+        # force name to be title case
+        self.name = self.name.title()
+        super(GalleryImageTag, self).save()
+
+    def __unicode__(self):
+        return self.name
+
+
+class GalleryImage(models.Model):
+    image = SmartImageField(upload_to='./gallery_images/')
+    title = models.CharField(max_length=255, blank=True, null=True)
+    caption = models.TextField(blank=True, null=True)
+    ordering = models.IntegerField(default=1)
+    priority = models.BooleanField(
+        default=False,
+        help_text="Determines if this image should be displayed on home screen"
+    )
+    tags = models.ManyToManyField(GalleryImageTag)
+
+
 class BlogTag(models.Model):
     name = models.CharField(max_length=40)
 

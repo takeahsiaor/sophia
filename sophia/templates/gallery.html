@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load thumbnail %}
+{% block headtitle %}
+Gallery | Sophia Hsiao Studio
+{% endblock %}
+{% block meta %}
+  <meta name="description" content="Gallery of images taken of violin lessons, recitals, and other Sophia Hsiao Studio related content.">
+{% endblock %}
+
+{% block headloaders %}
+<link rel="stylesheet" href="{% static 'sophia/plugins/cube-portfolio/cubeportfolio/css/cubeportfolio.css' %}">
+<link rel="stylesheet" href="{% static 'sophia/plugins/cube-portfolio/cubeportfolio/custom/custom-cubeportfolio.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="breadcrumbs">
+    <div class="container">
+        <h1 class="pull-left">Gallery</h1>
+        <ul class="pull-right breadcrumb">
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li class="active"><a href="{% url 'gallery' %}">Gallery</a></li>
+        </ul>
+    </div><!--/container-->
+</div><!--/end breadcrumbs-->
+
+<div class="cube-portfolio container margin-bottom-60">
+    <div class="content">
+        <div class="fusion-portfolio wrapper-portfolio-grid cbp-3-col">
+            <div id="filters-container" class="cbp-l-filters-text content-xs">
+                |<div data-filter="*" class="cbp-filter-item-active cbp-filter-item"> All </div> |
+                {% for tag in image_tags %}
+                	<div data-filter=".{{tag.name|slugify}}" class="cbp-filter-item"> {{tag.name}} </div> |
+            	{% endfor %}
+            </div>
+            <br>
+            <div id="grid-container" class="cbp-l-grid-gallery">
+                <ul>
+                	{% for item in gallery_items %}
+                    <li class="cbp-item {% for tag in item.tags.all %} {{tag.name|slugify}}{%endfor%}">
+                        <a href="{{item.image|thumbnail_url:'gallery_full'}}" class="cbp-caption cbp-lightbox" data-title="{{item.title}} - {{item.caption|safe}}" data-caption="{{item.caption|safe}}">
+                            <div class="cbp-caption-defaultWrap">
+                                <img src="{{item.image|thumbnail_url:'gallery_thumb'}}" alt="" width="100%">
+                            </div>
+                            <div class="cbp-caption-activeWrap dark-transparent-hover">
+                                <div class="cbp-l-caption-alignCenter">
+                                    <div class="cbp-l-caption-body">
+                                        <div class="cbp-l-caption-text">{{item.title}}</div>
+                                        <p class="cbp-l-caption-desc">{{item.caption|safe}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block scriptloaders %}
+<script type="text/javascript" src="{% static 'sophia/plugins/cube-portfolio/cubeportfolio/js/jquery.cubeportfolio.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'sophia/js/plugins/cube-portfolio.js' %}"></script>
+</script>
+{% endblock %}

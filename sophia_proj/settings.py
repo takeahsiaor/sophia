@@ -61,8 +61,10 @@ CKEDITOR_CONFIGS = {
 
 THUMBNAIL_ALIASES = {
     '':{
-        'blog_thumb':{'size':(360, 200), 'background':'white','upscale':True},
-        'blog_main':{'size':(850, 480), 'background':'white', 'upscale':True},
+        'blog_thumb': {'size':(360, 200), 'background':'white','upscale':True},
+        'blog_main': {'size':(850, 480), 'background':'white', 'upscale':True},
+        'gallery_thumb': {'size':(366, 247), 'background':'white','upscale':True},
+        'gallery_full': {'size':(1450, 966), 'background':'black', 'upscale':True},
     }
 }
 
