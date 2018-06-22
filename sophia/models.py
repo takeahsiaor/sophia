@@ -67,6 +67,18 @@ class GalleryImage(models.Model):
     )
     tags = models.ManyToManyField(GalleryImageTag)
 
+    def save(self):
+        """ This makes ordering a bit easier. If The order set on current image
+        already exists, this will push all the other images down in order
+        """
+        past_image_in_order = GalleryImage.objects.filter(ordering=self.ordering)
+
+        if past_image_in_order and past_image_in_order[0].id != self.id:
+            past_image_obj = past_image_in_order[0]
+            past_image_obj.ordering = self.ordering + 1
+            past_image_obj.save()
+        super(GalleryImage, self).save()
+
 
 class BlogTag(models.Model):
     name = models.CharField(max_length=40)
