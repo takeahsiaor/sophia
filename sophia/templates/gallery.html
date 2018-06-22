@@ -40,9 +40,9 @@ Gallery | Sophia Hsiao Studio
                 	{% for item in gallery_items %}
                     <li class="cbp-item {% for tag in item.tags.all %} {{tag.name|slugify}}{%endfor%}">
                         {% if item.image.is_landscape %}
-                            <a href="{{item.image|thumbnail_url:'gallery_full_landscape'}}" class="cbp-caption cbp-lightbox" data-title="{{item.title}} - {{item.caption|safe}}" data-caption="{{item.caption|safe}}">
+                            <a href="{{item.image|thumbnail_url:'gallery_full_landscape'}}" class="cbp-caption cbp-lightbox" data-title="{{item.title}}{% if item.caption %} - {{item.caption|safe}}{% endif %}" data-caption="{{item.caption|safe}}">
                         {% else %}
-                            <a href="{{item.image|thumbnail_url:'gallery_full_portrait'}}" class="cbp-caption cbp-lightbox" data-title="{{item.title}} - {{item.caption|safe}}" data-caption="{{item.caption|safe}}">
+                            <a href="{{item.image|thumbnail_url:'gallery_full_portrait'}}" class="cbp-caption cbp-lightbox" data-title="{{item.title}}{% if item.caption %} - {{item.caption|safe}}{% endif %}" data-caption="{{item.caption|safe}}">
                         {% endif %}
                             <div class="cbp-caption-defaultWrap">
                                 <img src="{{item.image|thumbnail_url:'gallery_thumb'}}" alt="" width="100%">
