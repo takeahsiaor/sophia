@@ -24,21 +24,26 @@ Gallery | Sophia Hsiao Studio
     </div><!--/container-->
 </div><!--/end breadcrumbs-->
 
+
 <div class="cube-portfolio container margin-bottom-60">
     <div class="content">
         <div class="fusion-portfolio wrapper-portfolio-grid cbp-3-col">
             <div id="filters-container" class="cbp-l-filters-text content-xs">
                 |<div data-filter="*" class="cbp-filter-item-active cbp-filter-item"> All </div> |
                 {% for tag in image_tags %}
-                	<div data-filter=".{{tag.name|slugify}}" class="cbp-filter-item"> {{tag.name}} </div> |
-            	{% endfor %}
+                <div data-filter=".{{tag.name|slugify}}" class="cbp-filter-item"> {{tag.name}} </div> |
+                {% endfor %}
             </div>
             <br>
             <div id="grid-container" class="cbp-l-grid-gallery">
                 <ul>
                 	{% for item in gallery_items %}
                     <li class="cbp-item {% for tag in item.tags.all %} {{tag.name|slugify}}{%endfor%}">
-                        <a href="{{item.image|thumbnail_url:'gallery_full'}}" class="cbp-caption cbp-lightbox" data-title="{{item.title}} - {{item.caption|safe}}" data-caption="{{item.caption|safe}}">
+                        {% if item.image.is_landscape %}
+                            <a href="{{item.image|thumbnail_url:'gallery_full_landscape'}}" class="cbp-caption cbp-lightbox" data-title="{{item.title}} - {{item.caption|safe}}" data-caption="{{item.caption|safe}}">
+                        {% else %}
+                            <a href="{{item.image|thumbnail_url:'gallery_full_portrait'}}" class="cbp-caption cbp-lightbox" data-title="{{item.title}} - {{item.caption|safe}}" data-caption="{{item.caption|safe}}">
+                        {% endif %}
                             <div class="cbp-caption-defaultWrap">
                                 <img src="{{item.image|thumbnail_url:'gallery_thumb'}}" alt="" width="100%">
                             </div>
@@ -64,5 +69,4 @@ Gallery | Sophia Hsiao Studio
 {% block scriptloaders %}
 <script type="text/javascript" src="{% static 'sophia/plugins/cube-portfolio/cubeportfolio/js/jquery.cubeportfolio.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'sophia/js/plugins/cube-portfolio.js' %}"></script>
-</script>
 {% endblock %}
