@@ -63,7 +63,7 @@ THUMBNAIL_ALIASES = {
     '':{
         'blog_thumb': {'size':(360, 200), 'background':'white','upscale':True},
         'blog_main': {'size':(850, 480), 'background':'white', 'upscale':True},
-        'gallery_thumb': {'size':(366, 247), 'background':'black','upscale':True, 'crop': 'smart'},
+        'gallery_thumb': {'size':(366, 0), 'autocrop': True, 'crop': 'scale', 'upscale':True},
         'gallery_full_landscape': {'size':(1450, 966), 'background':'black', 'upscale':True},
         'gallery_full_portrait': {'size':(966, 1450), 'background':'black', 'upscale':True},
     }
