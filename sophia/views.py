@@ -260,7 +260,7 @@ class ScheduleTrialLessonView(FormView):
         ).order_by('day', 'start_time')
         trial_lessons = []
         for student in students:
-            lesson_dates = student.get_lesson_dates()
+            lesson_dates = student.get_lesson_dates(weeks=1)
             trial_lessons.append(
                 {
                     'student':student, 
