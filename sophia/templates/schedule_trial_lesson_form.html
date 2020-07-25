@@ -1,5 +1,14 @@
             <form method="post" id="sky-form3" class="sky-form sky-changes-3">
               {% csrf_token %}
+              {% if form.non_field_errors %}
+                <div class="non-field-errors">
+                  {% for error in form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {{error}}
+                    </div>
+                  {% endfor %}
+                </div>
+              {% endif %}
               <fieldset>
                 <div class="row">
                   {{form.date}}
@@ -76,17 +85,10 @@
                     <p class="form-font">{{form.own_violin.label}}</p>
                   </label>
                 </section>
-
                 <section>
-                  <label class="label">Enter characters below:</label>
-                  <label class="input input-captcha">
-                    {{form.captcha}}
-                  </label>
-                  {% if form.captcha.errors %}
-                    {% for error in form.captcha.errors %}
-                      <em for="captcha" class="alert-danger">{{error}}</em>
-                    {% endfor %}
-                  {% endif %}
+                  <script src='https://www.google.com/recaptcha/api.js'></script>
+                  <div class="g-recaptcha" data-sitekey="{{recaptcha_site_key}}">
+                  </div>
                 </section>
                 
                 <div class="modal-footer">

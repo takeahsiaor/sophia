@@ -1,5 +1,4 @@
 import views
-from captcha import urls as captcha_urls
 from ckeditor import urls as ckeditor_urls
 
 from django.conf import settings
@@ -25,7 +24,6 @@ urlpatterns = [
     url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps}),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^ckeditor/', include(ckeditor_urls)),
-    url(r'^captcha/', include(captcha_urls)),
     url(r'^$', views.HomeView.as_view(), name='home'),
     url(r'^api/', include(router.urls)),
     url(r'^bio/$', views.BioView.as_view(), name='bio'),

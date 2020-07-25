@@ -4,8 +4,9 @@ from django import forms
 from django.core.mail import send_mail
 from django.conf import settings
 from django.template.loader import render_to_string
-from captcha.fields import CaptchaField, CaptchaTextInput
 from sophia.models import Student
+from sophia.utils import is_recaptcha_valid
+
 
 class ContactForm(forms.Form):
     name = forms.CharField(label='Name', max_length=100,
@@ -18,11 +19,19 @@ class ContactForm(forms.Form):
                                 widget=forms.TextInput(attrs={'class':'form-control'}))
     message = forms.CharField(label='Message', required=True,
                                 widget=forms.Textarea(attrs={'class':'form-control'}))
-    captcha = CaptchaField(widget=CaptchaTextInput(attrs={'class':'form-control'}))
     copy_email = forms.BooleanField(label="Send a copy to my email address",
         widget=forms.CheckboxInput(attrs={'class':'form-control'}),
         required=False
     )
+    def clean(self):
+        cleaned_data = super(ContactForm, self).clean()
+        # Validate recaptcha
+        if not is_recaptcha_valid(self.data):
+            raise forms.ValidationError(
+                'Failed reCAPTCHA validation. Please try again!'
+            )
+        return cleaned_data
+
 
     def send_contact_email(self):
         name = self.cleaned_data['name']
@@ -92,9 +101,6 @@ class ScheduleTrialLessonForm(forms.Form):
             'placeholder': "Is there anything else you'd like us to know?"}
         )
     )
-    captcha = CaptchaField(
-        widget=CaptchaTextInput(attrs={'class':'form-control',})
-    )
 
     def send_notification(self):
         student_name = self.cleaned_data['student_name']
@@ -131,6 +137,12 @@ class ScheduleTrialLessonForm(forms.Form):
 
     def clean(self):
         cleaned_data = super(ScheduleTrialLessonForm, self).clean()
+        # Validate recaptcha
+        if not is_recaptcha_valid(self.data):
+            raise forms.ValidationError(
+                'Failed reCAPTCHA validation. Please try again!'
+            )
+
         # Make sure that the date and timeslot are valid
         date = cleaned_data['date']
         student_pk = cleaned_data['student_pk']

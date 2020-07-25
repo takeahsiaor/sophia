@@ -1,6 +1,7 @@
 import datetime
 import dateutil.parser
 
+from django.conf import settings
 from django.contrib import messages
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.http import HttpResponse, HttpResponseRedirect
@@ -205,16 +206,22 @@ class ContactView(FormView):
         messages.success(self.request, success_message)
         return super(ContactView, self).form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super(ContactView, self).get_context_data(**kwargs)
+        context['recaptcha_site_key'] = settings.RECAPTCHA_SITE_KEY
+        return context
+
 
 class ScheduledLessonsView(TemplateView):
     template_name = 'scheduled_lessons.html'
 
-    def get_context_data(self):
-        context = super(ScheduledLessonsView, self).get_context_data()
+    def get_context_data(self, **kwargs):
+        context = super(ScheduledLessonsView, self).get_context_data(**kwargs)
         now = datetime.date.today()
         start = datetime.date(year=now.year, month=now.month, day=1)
         lessons_qs = ScheduledLesson.objects.filter(date__gte=start)
         context['form'] = ScheduleLessonForm()
+        context['recaptcha_site_key'] = settings.RECAPTCHA_SITE_KEY
         return context
 
 
@@ -269,6 +276,7 @@ class ScheduleTrialLessonView(FormView):
                 }
             )
         context['trial_lessons'] = trial_lessons
+        context['recaptcha_site_key'] = settings.RECAPTCHA_SITE_KEY
 
         return context
 

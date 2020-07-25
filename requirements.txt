@@ -19,6 +19,7 @@ mysql-python==1.2.3
 pyreadline==2.0
 python-dateutil==2.5.3
 pytz==2016.4
+requests==2.24.0
 six==1.10.0
 sqlparse==0.1.15
 yolk==0.4.3
