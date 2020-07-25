@@ -7,7 +7,6 @@ def is_recaptcha_valid(post_data):
         from the request POST
     :type post_data: dict
     """
-    import ipdb; ipdb.set_trace()
     recaptcha_response = post_data.get('g-recaptcha-response')
     payload = {
         'secret': settings.RECAPTCHA_SECRET_KEY,
