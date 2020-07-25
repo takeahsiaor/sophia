@@ -9,7 +9,7 @@ django-debug-toolbar==1.2.2
 django-extensions==1.6.7
 django-scheduler==0.8
 django-simple-captcha==0.5.1
-djangorestframework==3.5.3
+djangorestframework==3.9.1
 easy-thumbnails==2.2
 geopy==1.10.0
 icalendar==3.10
