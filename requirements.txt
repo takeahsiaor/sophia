@@ -1,4 +1,4 @@
-Django==1.9.6
+Django==2.2.24
 Pillow==3.2.0
 django-admin-bootstrapped==2.5.7
 django-analytical==2.2.1
