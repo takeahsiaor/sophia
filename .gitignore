@@ -1,4 +1,7 @@
 local_settings.py
+*.pem
+*.ppk
+SHS_public
 *.json
 # Byte-compiled / optimized / DLL files
 __pycache__/
