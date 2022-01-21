@@ -14,7 +14,7 @@ easy-thumbnails==2.2
 geopy==1.10.0
 icalendar==3.10
 ipdb==0.8
-ipython==3.1.0
+ipython==7.16.3
 mysql-python==1.2.3
 pyreadline==2.0
 python-dateutil==2.5.3
